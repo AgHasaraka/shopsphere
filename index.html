@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AliExpress Inspired</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-top">
+            <div class="logo">
+                <a href="https://www.aliexpress.com" target="_blank"><span class="brand">Shop<span class="highlight">Sphere</span></span></a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products" id="searchInput">
+                <button class="search-button"><i class="fas fa-search"></i></button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+            <div class="top-links">
+                <a href="https://play.google.com/store/apps/details?spm=a2g0o.home.0.0.650c76db31VaDR&id=com.alibaba.aliexpresshd" >Download App</a>
+                <a href="#">US/USD</a>
+                <a href="https://www.aliexpress.com">Log in</a>
+                <a href="https://www.aliexpress.com/p/shoppingcart/index.html?spm=a2g0o.home.header.1.650c76db31VaDR" class="cart"><i class="fas fa-shopping-cart"></i> Cart</a>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="menu">
+                <button class="categories-button"><i class="fas fa-bars"></i> Categories</button>
+                <a href="https://www.aliexpress.com/gcp/300000512/nnpage2024?spm=a2g0o.home.tab.1.650c76dbNciQLT&disableNav=YES&pha_manifest=ssr&_immersiveMode=true">                         Bundle deals</a>
+                <a href="https://www.aliexpress.com/ssr/300000556/zQFHEaEPNJ?spm=a2g0o.home.tab.2.650c76dbNciQLT&disableNav=YES&pha_manifest=ssr&_immersiveMode=trueMode=true">Choice</a>
+                <a href="https://www.aliexpress.com/ssr/300000444/GSDWp3p6aC?spm=a2g0o.home.tab.3.650c76dbNciQLT&disableNav=YES&pha_manifest=ssr&_immersiveMode=true">SuperDeals</a>
+                <a href="#">More <select>
+                  </select>
+               </a>
+
+                         
+            </div>
+        </div>
+    </header>
+    
+   
+
+    <!-- Carousel Section -->
+    <section id="carousel"><a href="https://www.aliexpress.com/ssr/300001527/12mainvenue?spm=a2g0o.home.sale_banner.1.650c76dbNciQLT&disableNav=YES&pha_manifest=ssr&_immersiveMode=true">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="qq.png"   width=3800  alt="Slide 1"></div>
+                <div class="swiper-slide"><img src="ww.png" width=3800 alt="Slide 2"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div></a>
+
+    </section>
+ <!-- Hero Section -->
+    <section id="hero">
+        <h2><b>Today's deals</b></h2>
+            </section>
+
+    <!-- Product Listings Section -->
+    <section id="product-listings">
+        <!-- Placeholder for external content -->
+    </section>
+
+    <script>
+        // Dynamically load the product listings from an external file
+        fetch('products.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load external HTML file.');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('product-listings').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading external file:', error));
+    </script>
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 🙄All rights reserved.</p>
+    </footer>
+
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Initialize Swiper Carousel
+        const swiper = new Swiper('.swiper-container', {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        // Search Suggestions Logic
+        const searchInput = document.getElementById('searchInput');
+        const searchSuggestions = document.getElementById('searchSuggestions');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim();
+            searchSuggestions.innerHTML = '';
+            if (query) {
+                const suggestions = ['Free Delivery Items', 'Top Products', 'Winter Sale Items'];
+                suggestions.forEach(item => {
+                    const suggestionDiv = document.createElement('div');
+                    suggestionDiv.textContent = item;
+                    suggestionDiv.classList.add('suggestion');
+                    suggestionDiv.addEventListener('click', () => {
+                        searchInput.value = item;
+                        searchSuggestions.innerHTML = '';
+                    });
+                    searchSuggestions.appendChild(suggestionDiv);
+                });
+                searchSuggestions.style.display = 'block';
+            } else {
+                searchSuggestions.style.display = 'none';
+            }
+        });
+
+        // Hide suggestions when clicking outside the input
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                searchSuggestions.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
