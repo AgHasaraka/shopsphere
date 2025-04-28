@@ -16,7 +16,7 @@
     <header class="header">
         <div class="header-top">
             <div class="logo">
-                <a href="https://s.click.aliexpress.com/e/_oEMxn2h" target="_parent">Shop<span class="highlight">Sphere</span></span></a>
+                <a href="https://s.click.aliexpress.com/e/_oEMxn2h" target="_parent">Shop<span class="highlight">Sphere</span></a>
             </div>
             <div class="search-bar">
                 <input type="text" placeholder="Search for products" id="searchInput">
@@ -24,121 +24,88 @@
                 <div class="search-suggestions" id="searchSuggestions"></div>
             </div>
             <div class="top-links">
-                <a href="https://play.google.com/store/apps/details?spm=a2g0o.home.0.0.650c76db31VaDR&id=com.alibaba.aliexpresshd" >Download App</a>
+                <a href="https://play.google.com/store/apps/details?spm=a2g0o.home.0.0.650c76db31VaDR&id=com.alibaba.aliexpresshd">Download App</a>
                 <a href="#">US/USD</a>
                 <a href="https://s.click.aliexpress.com/e/_oEMxn2h">Log in</a>
-                <a href="https://www.aliexpress.com/p/shoppingcart/index.html?spm=a2g0o.home.header.1.650c76db31VaDR" class="cart"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a href="https://www.aliexpress.com/p/shoppingcart/index.html?spm=a2g0o.home.header.1.650c76db31VaDR" class="cart">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                </a>
             </div>
         </div>
         <div class="header-bottom">
             <div class="menu">
                 <button class="categories-button"><i class="fas fa-bars"></i> Categories</button>
-                <a href="https://s.click.aliexpress.com/e/_oEMxn2h">                         Bundle deals</a>
+                <a href="https://s.click.aliexpress.com/e/_oEMxn2h">Bundle Deals</a>
                 <a href="https://s.click.aliexpress.com/e/_oEMxn2h">Choice</a>
                 <a href="https://s.click.aliexpress.com/e/_oEMxn2h">SuperDeals</a>
-                <a href="#">More <select>
-                  </select>
-               </a>
-
-                         
+                <a href="#">More 
+                    <select>
+                        <option value="about">About Us</option>
+                        <option value="contact">Contact Us</option>
+                        <option value="faq">FAQ</option>
+                    </select>
+                </a>
             </div>
         </div>
     </header>
 
-   <a href='https://s.click.aliexpress.com/e/_okBjGfX' target='_parent'><img width='1400' height='200' src='https://ae01.alicdn.com/kf/Sa4002a5d38eb46a7a10297744e1761afo.jpg' /></a>
-
-    <!-- Carousel Section -->
-      <!--  <section id="carousel"><a href="https://s.click.aliexpress.com/e/_oCEd7f7?bz=300*250">
+    <!-- Banner Section -->
+    <section id="carousel">
+        <div class="swiper-container">
             <div class="swiper-wrapper">
-                <div class="swiper-slide"><img src="qq.png"   width=3800  alt="Slide 1"></div>
-                <div class="swiper-slide"><img src="ww.png" width=3800 alt="Slide 2"></div>
+                <div class="swiper-slide">
+                    <a href="https://s.click.aliexpress.com/e/_oCM24c5" target="_blank"><img src="//ae01.alicdn.com/kf/S953632ef2d0b4935a0721d106f482997o.jpg"  alt="Slide 1"></a>
+
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://s.click.aliexpress.com/e/_opRjF9b" target="_blank"><img src="//ae01.alicdn.com/kf/S8da83866b60949759efe6430b6de00d1D.jpg" alt="Slide 2"></a>
+                </div>
+
+                <div class="swiper-slide">
+                    <a href="https://s.click.aliexpress.com/e/_opUl62h" target="_blank"><img src="//ae01.alicdn.com/kf/S6b8ea630f95d473ab33a29391ccb3ed3D.jpg" alt="Slide 3"></a>
+                </div>
             </div>
             <div class="swiper-pagination"></div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
-        </div></a> -->
+        </div>
+    </section><br/>
+    
+    
+    
+    <!-- Carousel Section -->
+    <section id="carousel">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
 
+                <div class="swiper-slide">
+                    <img src="ww.png" alt="Slide 2">
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
     </section>
- <!-- Hero Section -->
+
+    <!-- Hero Section -->
     <section id="hero">
         <h2><b>Today's deals</b></h2>
-            </section>
+        <p>Ends in: <span id="countdown"></span></p>
+    </section>
 
     <!-- Product Listings Section -->
     <section id="product-listings">
         <!-- Placeholder for external content -->
     </section>
 
-    <script>
-        // Dynamically load the product listings from an external file
-        fetch('products.html')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to load external HTML file.');
-                }
-                return response.text();
-            })
-            .then(data => {
-                document.getElementById('product-listings').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading external file:', error));
-    </script>
     <!-- Footer Section -->
     <footer>
-        <p>&copy; 🙄All rights reserved.</p>
+        <p>&copy; <span id="currentYear"></span> All rights reserved.</p>
     </footer>
 
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script>
-        // Initialize Swiper Carousel
-        const swiper = new Swiper('.swiper-container', {
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
-
-        // Search Suggestions Logic
-        const searchInput = document.getElementById('searchInput');
-        const searchSuggestions = document.getElementById('searchSuggestions');
-
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.trim();
-            searchSuggestions.innerHTML = '';
-            if (query) {
-                const suggestions = ['Free Delivery Items', 'Top Products', 'Winter Sale Items'];
-                suggestions.forEach(item => {
-                    const suggestionDiv = document.createElement('div');
-                    suggestionDiv.textContent = item;
-                    suggestionDiv.classList.add('suggestion');
-                    suggestionDiv.addEventListener('click', () => {
-                        searchInput.value = item;
-                        searchSuggestions.innerHTML = '';
-                    });
-                    searchSuggestions.appendChild(suggestionDiv);
-                });
-                searchSuggestions.style.display = 'block';
-            } else {
-                searchSuggestions.style.display = 'none';
-            }
-        });
-
-        // Hide suggestions when clicking outside the input
-        document.addEventListener('click', (e) => {
-            if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
-                searchSuggestions.style.display = 'none';
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
