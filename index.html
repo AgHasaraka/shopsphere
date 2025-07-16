@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Express Inspired</title>
+    <title>ShopSphere - Today's Deals</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 </head>
 <body>
-    <!-- Header Section -->
     <header class="header">
         <div class="header-top">
             <div class="logo">
-                <a href="https://s.click.aliexpress.com/e/_oEMxn2h" target="_parent">Shop<span class="highlight">Sphere</span></a>
+                <a href="#">Shop<span class="highlight">Sphere</span></a>
             </div>
             <div class="search-bar">
                 <input type="text" placeholder="Search for products" id="searchInput">
@@ -24,62 +24,43 @@
                 <div class="search-suggestions" id="searchSuggestions"></div>
             </div>
             <div class="top-links">
-                <a href="https://play.google.com/store/apps/details?spm=a2g0o.home.0.0.650c76db31VaDR&id=com.alibaba.aliexpresshd">Download App</a>
+                <a href="https://play.google.com/store/apps/details?id=com.alibaba.aliexpresshd" target="_blank">Download App <i class="fas fa-external-link-alt"></i></a>
                 <a href="#">US/USD</a>
-                <a href="https://s.click.aliexpress.com/e/_oEMxn2h">Log in</a>
-                <a href="https://www.aliexpress.com/p/shoppingcart/index.html?spm=a2g0o.home.header.1.650c76db31VaDR" class="cart">
-                    <i class="fas fa-shopping-cart"></i> Cart
+                <a href="https://s.click.aliexpress.com/e/_oEMxn2h" target="_blank">Log in <i class="fas fa-external-link-alt"></i></a>
+                <a href="https://www.aliexpress.com/p/shoppingcart/index.html" target="_blank" class="cart">
+                    <i class="fas fa-shopping-cart"></i> Cart <i class="fas fa-external-link-alt"></i>
                 </a>
             </div>
         </div>
         <div class="header-bottom">
             <div class="menu">
                 <button class="categories-button"><i class="fas fa-bars"></i> Categories</button>
-                <a href="https://s.click.aliexpress.com/e/_oEMxn2h">Bundle Deals</a>
-                <a href="https://s.click.aliexpress.com/e/_oEMxn2h">Choice</a>
-                <a href="https://s.click.aliexpress.com/e/_oEMxn2h">SuperDeals</a>
-                <a href="#">More 
-                    <select>
-                        <option value="about">About Us</option>
-                        <option value="contact">Contact Us</option>
-                        <option value="faq">FAQ</option>
-                    </select>
-                </a>
+                <a href="https://s.click.aliexpress.com/e/_oEMxn2h" target="_blank">Bundle Deals <i class="fas fa-external-link-alt"></i></a>
+                <a href="https://s.click.aliexpress.com/e/_oEMxn2h" target="_blank">Choice <i class="fas fa-external-link-alt"></i></a>
+                <a href="https://s.click.aliexpress.com/e/_oEMxn2h" target="_blank">SuperDeals <i class="fas fa-external-link-alt"></i></a>
+                <div class="dropdown">
+                    <button class="dropdown-btn">More <i class="fas fa-caret-down"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#">About Us</a>
+                        <a href="#">Contact Us</a>
+                        <a href="#">FAQ</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Banner Section -->
-    <section id="carousel">
+    <section id="banner-carousel">
         <div class="swiper-container">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <a href="https://s.click.aliexpress.com/e/_oCM24c5" target="_blank"><img src="//ae01.alicdn.com/kf/S953632ef2d0b4935a0721d106f482997o.jpg"  alt="Slide 1"></a>
-
+                    <a href="https://s.click.aliexpress.com/e/_oCM24c5" target="_blank"><img src="//ae01.alicdn.com/kf/S953632ef2d0b4935a0721d106f482997o.jpg" alt="Banner 1"></a>
                 </div>
                 <div class="swiper-slide">
-                    <a href="https://s.click.aliexpress.com/e/_opRjF9b" target="_blank"><img src="//ae01.alicdn.com/kf/S8da83866b60949759efe6430b6de00d1D.jpg" alt="Slide 2"></a>
+                    <a href="https://s.click.aliexpress.com/e/_opRjF9b" target="_blank"><img src="//ae01.alicdn.com/kf/S8da83866b60949759efe6430b6de00d1D.jpg" alt="Banner 2"></a>
                 </div>
-
                 <div class="swiper-slide">
-                    <a href="https://s.click.aliexpress.com/e/_opUl62h" target="_blank"><img src="//ae01.alicdn.com/kf/S6b8ea630f95d473ab33a29391ccb3ed3D.jpg" alt="Slide 3"></a>
-                </div>
-            </div>
-            <div class="swiper-pagination"></div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-        </div>
-    </section><br/>
-    
-    
-    
-    <!-- Carousel Section -->
-    <section id="carousel">
-        <div class="swiper-container">
-            <div class="swiper-wrapper">
-
-                <div class="swiper-slide">
-                    <img src="ww.png" alt="Slide 2">
+                    <a href="https://s.click.aliexpress.com/e/_opUl62h" target="_blank"><img src="//ae01.alicdn.com/kf/S6b8ea630f95d473ab33a29391ccb3ed3D.jpg" alt="Banner 3"></a>
                 </div>
             </div>
             <div class="swiper-pagination"></div>
@@ -88,23 +69,18 @@
         </div>
     </section>
 
-    <!-- Hero Section -->
     <section id="hero">
         <h2><b>Today's deals</b></h2>
         <p>Ends in: <span id="countdown"></span></p>
     </section>
 
-    <!-- Product Listings Section -->
     <section id="product-listings">
-        <!-- Placeholder for external content -->
-    </section>
+        </section>
 
-    <!-- Footer Section -->
     <footer>
-        <p>&copy; <span id="currentYear"></span> All rights reserved.</p>
+        <p>&copy; <span id="currentYear"></span> ShopSphere. All rights reserved.</p>
     </footer>
 
-    <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
