@@ -33,30 +33,53 @@ window.addEventListener('scroll', () => {
 // Fetch product data from JSON
 let products = [];
 fetch('products.json')
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
-        products = data; // Store product data in a global variable
+        products = data; // Store product data
         displayProducts(products); // Display all products initially
     })
-    .catch(error => console.error('Error loading products:', error));
+    .catch(error => {
+        console.error('Error loading products:', error);
+        const productContainer = document.getElementById('product-listings');
+        // Display a user-friendly error message on the page
+        productContainer.style.textAlign = 'center';
+        productContainer.innerHTML = `
+            <p style="color: var(--dark-gray); font-size: 18px; padding: 40px;">
+                Oops! We had trouble loading the products.
+                <br>
+                Please check your internet connection and try again later.
+            </p>`;
+    });
 
 // Function to display products
 function displayProducts(productList) {
     const productContainer = document.getElementById('product-listings');
     productContainer.innerHTML = ''; // Clear previous results
 
+    if (productList.length === 0) {
+        productContainer.innerHTML = '<p>No products found.</p>';
+        return;
+    }
+
     productList.forEach(product => {
         const productCard = document.createElement('div');
         productCard.classList.add('product');
 
         productCard.innerHTML = `
-            <a href="${product.link}" target="_blank">
+            <a href="${product.link}" target="_blank" title="View product on AliExpress">
                 <img src="${product.image}" alt="${product.name}">
             </a>
             <div class="product-info">
                 <h3>${product.name}</h3>
-                <p class="price">${product.price}</p>
-                <p class="shipping">${product.shipping}</p>
+                <div>
+                    <p class="price">${product.price}</p>
+                    <p class="shipping">${product.shipping}</p>
+                </div>
             </div>
         `;
 
@@ -64,9 +87,19 @@ function displayProducts(productList) {
     });
 }
 
-// Search Suggestions Logic
+// Search Logic
 const searchInput = document.getElementById('searchInput');
 const searchSuggestions = document.getElementById('searchSuggestions');
+const searchButton = document.querySelector('.search-button');
+
+function performSearch() {
+    const query = searchInput.value.trim().toLowerCase();
+    const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(query)
+    );
+    displayProducts(filteredProducts);
+    searchSuggestions.style.display = 'none';
+}
 
 searchInput.addEventListener('input', () => {
     const query = searchInput.value.trim().toLowerCase();
@@ -78,13 +111,13 @@ searchInput.addEventListener('input', () => {
         );
 
         if (filteredProducts.length > 0) {
-            filteredProducts.forEach(product => {
+            filteredProducts.slice(0, 10).forEach(product => { // Limit suggestions
                 const suggestionDiv = document.createElement('div');
                 suggestionDiv.textContent = product.name;
                 suggestionDiv.classList.add('suggestion');
                 suggestionDiv.addEventListener('click', () => {
                     searchInput.value = product.name;
-                    searchSuggestions.innerHTML = '';
+                    searchSuggestions.style.display = 'none';
                     displayProducts([product]); // Display only the selected product
                 });
                 searchSuggestions.appendChild(suggestionDiv);
@@ -103,7 +136,14 @@ searchInput.addEventListener('input', () => {
     }
 });
 
-// Hide suggestions when clicking outside the input
+searchButton.addEventListener('click', performSearch);
+searchInput.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+        performSearch();
+    }
+});
+
+// Hide suggestions when clicking outside
 document.addEventListener('click', (e) => {
     if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
         searchSuggestions.style.display = 'none';
@@ -112,25 +152,31 @@ document.addEventListener('click', (e) => {
 
 // Countdown Timer
 function startCountdown(endTime) {
-    const now = new Date().getTime();
-    const timeRemaining = endTime - now;
+    const countdownElement = document.getElementById('countdown');
 
-    if (timeRemaining > 0) {
-        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+    function updateTimer() {
+        const now = new Date().getTime();
+        const timeRemaining = endTime - now;
 
-        document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        if (timeRemaining > 0) {
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-        setTimeout(() => startCountdown(endTime), 1000);
-    } else {
-        document.getElementById('countdown').textContent = 'Expired!';
+            countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        } else {
+            countdownElement.textContent = 'Deals Expired!';
+            clearInterval(timerInterval);
+        }
     }
+
+    const timerInterval = setInterval(updateTimer, 1000);
+    updateTimer(); // Initial call
 }
 
-// Set the end time for today's deals (e.g., 24 hours from now)
-const endTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+// **FIXED**: Set the end time to a specific future date
+const endTime = new Date('July 31, 2025 23:59:59').getTime();
 startCountdown(endTime);
 
 // Dynamic Copyright Year
