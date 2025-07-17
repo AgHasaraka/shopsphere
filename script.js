@@ -38,63 +38,64 @@ document.addEventListener('DOMContentLoaded', () => {
             productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">Could not load products. Please try again later.</p>`;
         });
         
-    // --- Display Products in Grid ---
-    function displayProducts(products) {
-        productListings.innerHTML = '';
-        if (products.length === 0) {
-            productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">No products match your search.</p>`;
-            return;
-        }
-        products.forEach(product => {
-            const productCard = document.createElement('a');
-            productCard.href = product.link;
-            productCard.target = '_blank';
-            productCard.classList.add('product-card');
-
-            // --- Generate HTML for different parts ---
-            const saleBadgeHTML = product.sale_badge ? `<span class="sale-badge">${product.sale_badge}</span>` : '';
-            const originalPriceHTML = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
-            const unitsSoldHTML = product.units_sold ? `<span class="units-sold">${product.units_sold} sold</span>` : '';
-            const extraPromoHTML = product.extra_promo ? `<span class="extra-promo">${product.extra_promo}</span>` : '';
-            
-            // Generate star icons based on rating
-            let starsHTML = '';
-            if (product.rating) {
-                starsHTML += '<div class="star-rating">';
-                for (let i = 0; i < 5; i++) {
-                    starsHTML += `<i class="fas fa-star ${i < product.rating ? 'filled' : ''}"></i>`;
-                }
-                starsHTML += '</div>';
-            }
-
-            productCard.innerHTML = `
-                <div class="product-image-container">
-                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
-                    ${saleBadgeHTML}
-                    <div class="cart-icon-overlay"><i class="fas fa-shopping-cart"></i></div>
-                </div>
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <div class="rating-line">
-                        ${starsHTML}
-                        ${unitsSoldHTML}
-                    </div>
-                    <div class="price-info">
-                        <span class="price">${product.price}</span>
-                        ${originalPriceHTML}
-                    </div>
-                    <div class="promo-line">
-                        <span class="shipping">${product.shipping}</span>
-                    </div>
-                </div>
-            `;
-            // Note: I moved shipping to the promo-line as extra_promo wasn't being used in the example data. 
-            // You can swap it back if you add `extra_promo` data.
-            // Replace <span class="shipping">...</span> with ${extraPromoHTML} if needed.
-            
-            productListings.appendChild(productCard);
-        });
+// REPLACE the old displayProducts function with this new one
+function displayProducts(products) {
+    productListings.innerHTML = '';
+    if (products.length === 0) {
+        productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">No products match your search.</p>`;
+        return;
     }
+    products.forEach(product => {
+        const productCard = document.createElement('a');
+        productCard.href = product.link;
+        productCard.target = '_blank';
+        productCard.classList.add('product-card');
+
+        // --- Generate HTML for different parts ---
+        const saleBadgeHTML = product.sale_badge ? `<span class="sale-badge">${product.sale_badge}</span>` : '';
+        const originalPriceHTML = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
+        const unitsSoldHTML = product.units_sold ? `<span class="units-sold">${product.units_sold} sold</span>` : '';
+        const extraPromoHTML = product.extra_promo ? `<span class="extra-promo">${product.extra_promo}</span>` : '';
+        const shippingHTML = product.shipping ? `<span class="shipping">${product.shipping}</span>` : '';
+        
+        // Generate star icons based on rating
+        let starsHTML = '';
+        if (product.rating) {
+            starsHTML += '<div class="star-rating">';
+            for (let i = 0; i < 5; i++) {
+                starsHTML += `<i class="fas fa-star ${i < product.rating ? 'filled' : ''}"></i>`;
+            }
+            starsHTML += '</div>';
+        }
+
+        productCard.innerHTML = `
+            <div class="product-image-container">
+                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
+                <div class="cart-icon-overlay"><i class="fas fa-shopping-cart"></i></div>
+            </div>
+            <div class="product-info">
+                <h3>${product.name}</h3>
+                <div class="rating-line">
+                    ${starsHTML}
+                    ${unitsSoldHTML}
+                </div>
+                <div class="price-info">
+                    <span class="price">${product.price}</span>
+                    ${originalPriceHTML}
+                </div>
+                <div class="promo-line">
+                    ${saleBadgeHTML}
+                    ${extraPromoHTML}
+                </div>
+                <div class="meta-info">
+                    ${shippingHTML}
+                </div>
+            </div>
+        `;
+        
+        productListings.appendChild(productCard);
+    });
+}
 
     // --- Search Functionality (abbreviated for clarity, no changes needed here) ---
     function performSearch() {
