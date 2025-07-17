@@ -234,7 +234,7 @@ body {
 }
 
 .star-rating .fa-star.filled {
-    color: #ffc107; /* Gold color for filled stars */
+    color: var(--text-dark); /* Changed from yellow to black */
 }
 
 .units-sold {
