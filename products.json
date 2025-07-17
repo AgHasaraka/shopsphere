@@ -1,90 +1,52 @@
 [
     {
-        "name": "Tempered Glass for iPhone",
-        "price": "$0.99",
-        "original_price": "$2.99",
-        "shipping": "Free Shipping",
-        "image": "https://ae01.alicdn.com/kf/Sbbfe68d94ff849b7ae378e13a44ddf59e.jpg",
-        "link": "https://s.click.aliexpress.com/e/_oFsSnhj",
-        "rating": 4.8,
-        "sales": "10000+ sold",
-        "tags": ["Welcome Deal"]
+        "name": "New 3 in 1 Fan Air Conditioner",
+        "price": "$7.30",
+        "original_price": "$18.47",
+        "sale_badge": "Sale",
+        "units_sold": "8000+",
+        "shipping": "Free shipping",
+        "image": "https://ae01.alicdn.com/kf/S51f3e7a0447948f986da3a14e1f72661y.jpg",
+        "link": "https://s.click.aliexpress.com/e/_oB0i3eD"
     },
     {
-        "name": "Ear Headset for Gaming",
-        "price": "$0.99",
-        "original_price": "$4.50",
-        "shipping": "Free Shipping",
-        "image": "https://ae01.alicdn.com/kf/S3b05b711326844438dd1f53311657f84C.jpg",
-        "link": "https://s.click.aliexpress.com/e/_optPGYV",
-        "rating": 4.7,
-        "sales": "5000+ sold",
-        "tags": ["Sale", "-78%"]
+        "name": "Men's Waterproof Large Capacity Bag",
+        "price": "$2.78",
+        "original_price": "$6.31",
+        "sale_badge": "Sale",
+        "units_sold": "50000+",
+        "shipping": "Free shipping",
+        "image": "https://ae01.alicdn.com/kf/S7f0c1f2b1d3d4b9b8b0e6a3a4b6f1c7eY.jpg",
+        "link": "https://s.click.aliexpress.com/e/_oFsSnhj"
     },
     {
-        "name": "Micro USB Fast Charging Cable",
-        "price": "$0.99",
-        "original_price": "$1.99",
-        "shipping": "Free Shipping",
-        "image": "https://ae01.alicdn.com/kf/H2417b66bd5424ba1b9dc9e59620e071aI.jpg",
-        "link": "https://s.click.aliexpress.com/e/_okYojeN",
-        "rating": 4.9,
-        "sales": "20000+ sold",
-        "tags": ["Choice"]
-    },
-    {
-        "name": "Portable Earphone Storage Box",
-        "price": "$0.99",
-        "original_price": "$3.15",
-        "shipping": "Free Shipping",
-        "image": "https://ae01.alicdn.com/kf/Sfb174edb4d644cf99f5bcfa6d42603fco.jpg",
-        "link": "https://s.click.aliexpress.com/e/_oCWmAcN",
-        "rating": 4.6,
-        "sales": "8000+ sold",
-        "tags": ["Welcome Deal"]
-    },
-    {
-        "name": "USB Type C Fast Charging Cable",
-        "price": "$0.99",
-        "original_price": "$2.45",
-        "shipping": "Free Shipping",
-        "image": "https://ae01.alicdn.com/kf/S8de4f4b6a97a445b8be822c4f370403ca.png",
-        "link": "https://s.click.aliexpress.com/e/_olFoj5F",
-        "rating": 4.8,
-        "sales": "10000+ sold",
-        "tags": ["Choice"]
-    },
-    {
-        "name": "2025 New Huawei GT5 Pro Smart Watch",
-        "price": "$21.16",
-        "original_price": "$68.61",
-        "shipping": "Free Shipping",
-        "image": "https://ae01.alicdn.com/kf/S09e8636437a34563b7493630f956c361o.jpg",
-        "link": "https://s.click.aliexpress.com/e/_DFvYxGZ",
-        "rating": 4.9,
-        "sales": "2000+ sold",
-        "tags": ["New", "GPS"]
-    },
-    {
-        "name": "Handheld Mini Fan with Digital Display",
-        "price": "$0.99",
-        "original_price": "$12.42",
-        "shipping": "Free Shipping",
-        "image": "https://ae01.alicdn.com/kf/S227b2a60965e48328701831862551ef9L.jpg",
-        "link": "https://s.click.aliexpress.com/e/_DkM3z8h",
-        "rating": 4.7,
-        "sales": "10000+ sold",
-        "tags": ["Welcome Deal", "Choice"]
-    },
-    {
-        "name": "New Wireless Outdoor Bluetooth Speaker",
+        "name": "New Wireless Bluetooth Speaker",
         "price": "$0.99",
         "original_price": "$7.98",
-        "shipping": "Free Shipping",
-        "image": "https://ae01.alicdn.com/kf/S8d672221b2284f18b3297a7e80d0dcf2P.jpg",
-        "link": "https://s.click.aliexpress.com/e/_DE5Lp1T",
-        "rating": 4.6,
-        "sales": "10000+ sold",
-        "tags": ["Sale", "-88%"]
+        "sale_badge": "Welcome Deal",
+        "units_sold": "10000+",
+        "shipping": "Free shipping",
+        "image": "https://ae01.alicdn.com/kf/S22056a2912e944749a5b21588c2b7405U.jpg",
+        "link": "https://s.click.aliexpress.com/e/_oDZyDtL"
+    },
+    {
+        "name": "Xiaomi Mijia Real Bone Conduction",
+        "price": "$2.88",
+        "original_price": "$25.95",
+        "sale_badge": "Sale",
+        "units_sold": "10000+",
+        "shipping": "Free shipping",
+        "image": "https://ae01.alicdn.com/kf/S3a3f5a2879c24090ab0507a74421d0d9y.jpg",
+        "link": "https://s.click.aliexpress.com/e/_olFoj5F"
+    },
+    {
+        "name": "2025 New For Huawei GT5 Pro Smart Watch",
+        "price": "$21.15",
+        "original_price": "$168.61",
+        "sale_badge": "For 2025 New",
+        "units_sold": "2000+",
+        "shipping": "Free shipping",
+        "image": "https://ae01.alicdn.com/kf/S342e47f2c161492395a63e9f4a132de01.jpg",
+        "link": "https://s.click.aliexpress.com/e/_okS57sZ"
     }
 ]
