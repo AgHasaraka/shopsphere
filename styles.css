@@ -218,7 +218,9 @@ body {
     align-items: center;
     gap: 8px;
     margin-top: 4px;
-    height: 20px; /* Give it a fixed height */
+    height: 20px;
+    font-size: 13px;
+    color: var(--text-dark); /* Changed from --text-light */
 }
 
 .star-rating {
