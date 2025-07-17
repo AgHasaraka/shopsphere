@@ -205,6 +205,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 30px;
+    justify-content: center; /* Add this line */
 }
 .product-card {
     background-color: var(--bg-white);
@@ -340,9 +341,4 @@ body {
     #product-listings {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
-}
-#product-listings {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 30px;
 }
