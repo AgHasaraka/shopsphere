@@ -155,7 +155,7 @@ body {
 .extra-promo {
     color: var(--font-promo-red);
     font-size: 12px;
-    margin-top: 4px;
+    font-weight: bold; /* Changed from 500 */
 }
 .meta-info {
     display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
@@ -254,5 +254,5 @@ body {
 .meta-info {
     margin-top: 4px;
     font-size: 13px;
-    color: var(--text-light);
+    color: var(--text-dark); /* Changed from --text-light */
 }
