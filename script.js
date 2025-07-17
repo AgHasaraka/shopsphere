@@ -1,27 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Initialize Swiper Carousel
-    const swiper = new Swiper('.swiper-container', {
-        loop: true,
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-    });
-
-    // Sticky Header Behavior
+    // --- Sticky Header ---
     let lastScrollY = window.scrollY;
     const header = document.querySelector('.header');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+        if (window.scrollY > lastScrollY && window.scrollY > 150) {
             header.classList.add('hidden');
         } else {
             header.classList.remove('hidden');
@@ -29,108 +12,131 @@ document.addEventListener('DOMContentLoaded', () => {
         lastScrollY = window.scrollY;
     });
 
-    // Fetch product data from JSON
-    let products = [];
+    // --- Global Variables ---
+    let allProducts = [];
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    const productListings = document.getElementById('product-listings');
+
+    // --- Fetch and Display Products ---
     fetch('products.json')
         .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             return response.json();
         })
         .then(data => {
-            products = data;
-            displayProducts(products);
+            allProducts = data;
+            if (allProducts.length > 0) {
+                populateHero(allProducts[0]); // Use first product for Hero
+                displayProducts(allProducts.slice(1)); // Display rest in grid
+            }
         })
         .catch(error => {
-            console.error('Error loading products:', error);
-            const productContainer = document.getElementById('product-listings');
-            productContainer.innerHTML = `<p class="error-message">Oops! We couldn't load products. Please try again later.</p>`;
+            console.error('Failed to load products:', error);
+            productListings.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">Could not load products. Please try again later.</p>`;
         });
 
-    // --- NEW: Helper function to render star ratings ---
-    function renderStars(rating) {
-        let starsHTML = '';
-        const fullStars = Math.floor(rating);
-        const halfStar = rating % 1 >= 0.5 ? 1 : 0;
-        const emptyStars = 5 - fullStars - halfStar;
-        for (let i = 0; i < fullStars; i++) starsHTML += '<i class="fas fa-star"></i>';
-        if (halfStar) starsHTML += '<i class="fas fa-star-half-alt"></i>';
-        for (let i = 0; i < emptyStars; i++) starsHTML += '<i class="far fa-star"></i>';
-        return starsHTML;
+    // --- Populate Hero Section ---
+    function populateHero(product) {
+        document.getElementById('hero-product-image-container').innerHTML = `
+            <img src="${product.image}" alt="${product.name}" id="hero-product-image">
+        `;
+        document.getElementById('hero-product-name').textContent = product.name;
+        document.getElementById('hero-product-price').textContent = product.price;
+        document.getElementById('hero-product-link').href = product.link;
     }
 
-    // --- REWRITTEN: Function to display products with the new look ---
-    function displayProducts(productList) {
-        const productContainer = document.getElementById('product-listings');
-        productContainer.innerHTML = '';
-        if (productList.length === 0) {
-            productContainer.innerHTML = '<p class="error-message">No products match your search.</p>';
+    // --- Display Products in Grid ---
+    function displayProducts(products) {
+        productListings.innerHTML = '';
+        if (products.length === 0) {
+            productListings.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">No products match your search.</p>`;
             return;
         }
-
-        productList.forEach(product => {
-            const productCard = document.createElement('div');
+        products.forEach(product => {
+            const productCard = document.createElement('a');
+            productCard.href = product.link;
+            productCard.target = '_blank';
             productCard.classList.add('product-card');
-
-            const tagsHTML = product.tags.map(tag => `<span class="product-tag">${tag}</span>`).join('');
-
             productCard.innerHTML = `
-                <a href="${product.link}" target="_blank" class="product-link">
-                    <div class="product-image-container">
-                        <img src="${product.image}" alt="${product.name}" class="product-image">
-                        <div class="product-tags">${tagsHTML}</div>
+                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <div class="price-info">
+                        <span class="price">${product.price}</span>
+                        <span class="shipping">${product.shipping}</span>
                     </div>
-                    <div class="product-info">
-                        <h3 class="product-title">${product.name}</h3>
-                        <div class="product-pricing">
-                            <span class="product-price">${product.price}</span>
-                            <span class="product-original-price">${product.original_price}</span>
-                        </div>
-                        <div class="product-meta">
-                            <div class="product-rating">${renderStars(product.rating)}</div>
-                            <span class="product-sales">${product.sales}</span>
-                        </div>
-                        <p class="product-shipping">${product.shipping}</p>
-                    </div>
-                </a>
+                </div>
             `;
-            productContainer.appendChild(productCard);
+            productListings.appendChild(productCard);
         });
     }
 
-    // Search Logic
-    const searchInput = document.getElementById('searchInput');
-    const searchButton = document.querySelector('.search-button');
-
+    // --- Search Functionality ---
     function performSearch() {
         const query = searchInput.value.trim().toLowerCase();
-        const filteredProducts = products.filter(product => product.name.toLowerCase().includes(query));
-        displayProducts(filteredProducts);
+        if (query) {
+            const filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(query));
+            displayProducts(filteredProducts); // Search across all products
+        } else {
+            displayProducts(allProducts.slice(1)); // Show default grid if search is empty
+        }
+        searchSuggestions.style.display = 'none';
     }
 
-    searchButton.addEventListener('click', performSearch);
-    searchInput.addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') performSearch();
-        if (searchInput.value.trim() === '') displayProducts(products); // Show all if search is cleared
-    });
-    
-    // Countdown Timer
-    const endTime = new Date('July 31, 2025 23:59:59').getTime();
-    const countdownElement = document.getElementById('countdown');
-    const timerInterval = setInterval(() => {
-        const now = new Date().getTime();
-        const timeRemaining = endTime - now;
-        if (timeRemaining > 0) {
-            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-            countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        searchSuggestions.innerHTML = '';
+        if (query) {
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query)).slice(0, 5);
+            if (filtered.length > 0) {
+                filtered.forEach(product => {
+                    const div = document.createElement('div');
+                    div.classList.add('suggestion');
+                    div.textContent = product.name;
+                    div.onclick = () => {
+                        searchInput.value = product.name;
+                        searchSuggestions.style.display = 'none';
+                        displayProducts([product]);
+                    };
+                    searchSuggestions.appendChild(div);
+                });
+            } else {
+                searchSuggestions.innerHTML = `<div class="no-results">No results found</div>`;
+            }
+            searchSuggestions.style.display = 'block';
         } else {
-            countdownElement.textContent = 'Deals Expired!';
-            clearInterval(timerInterval);
+            searchSuggestions.style.display = 'none';
         }
+    });
+
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keyup', e => e.key === 'Enter' && performSearch());
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.search-container')) {
+            searchSuggestions.style.display = 'none';
+        }
+    });
+
+    // --- Countdown Timer ---
+    const countdownElement = document.getElementById('countdown');
+    const endTime = new Date('July 31, 2025 23:59:59').getTime();
+    const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+        if (distance < 0) {
+            clearInterval(interval);
+            countdownElement.textContent = "DEAL EXPIRED";
+            return;
+        }
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }, 1000);
 
-    // Dynamic Copyright Year
+    // --- Dynamic Copyright Year ---
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 });
