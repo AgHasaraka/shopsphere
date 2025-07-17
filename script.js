@@ -47,49 +47,53 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('hero-product-link').href = product.link;
     }
 
-    // --- Display Products in Grid ---
-    function displayProducts(products) {
-        productListings.innerHTML = '';
-        if (products.length === 0) {
-            productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">No products match your search.</p>`;
-            return;
-        }
-        products.forEach(product => {
-            const productCard = document.createElement('a');
-            productCard.href = product.link;
-            productCard.target = '_blank';
-            productCard.classList.add('product-card');
-
-            // Conditionally add the sale badge if it exists
-            const saleBadgeHTML = product.sale_badge ? `<span class="sale-badge">${product.sale_badge}</span>` : '';
-            
-            // Conditionally add the original price if it exists
-            const originalPriceHTML = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
-
-            // Conditionally add units sold if it exists
-            const unitsSoldHTML = product.units_sold ? `<span class="units-sold">${product.units_sold} sold</span>` : '';
-
-            productCard.innerHTML = `
-                <div class="product-image-container">
-                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
-                    ${saleBadgeHTML}
-                </div>
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <div class="price-info">
-                        <span class="price">${product.price}</span>
-                        ${originalPriceHTML}
-                    </div>
-                    <div class="meta-info">
-                        ${unitsSoldHTML}
-                        <span class="shipping">${product.shipping}</span>
-                    </div>
-                </div>
-            `;
-            productListings.appendChild(productCard);
-        });
+// REPLACE the old displayProducts function with this new one
+function displayProducts(products) {
+    productListings.innerHTML = '';
+    if (products.length === 0) {
+        productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">No products match your search.</p>`;
+        return;
     }
+    products.forEach(product => {
+        const productCard = document.createElement('a');
+        productCard.href = product.link;
+        productCard.target = '_blank';
+        productCard.classList.add('product-card');
 
+        // Conditionally add the sale badge if it exists
+        const saleBadgeHTML = product.sale_badge ? `<span class="sale-badge">${product.sale_badge}</span>` : '';
+        
+        // Conditionally add the original price if it exists
+        const originalPriceHTML = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
+
+        // Conditionally add units sold if it exists
+        const unitsSoldHTML = product.units_sold ? `<span class="units-sold">${product.units_sold} sold</span>` : '';
+        
+        // Conditionally add the extra promo text if it exists
+        const extraPromoHTML = product.extra_promo ? `<div class="extra-promo">${product.extra_promo}</div>` : '';
+
+        productCard.innerHTML = `
+            <div class="product-image-container">
+                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
+                ${saleBadgeHTML}
+                <div class="cart-icon-overlay"><i class="fas fa-shopping-cart"></i></div>
+            </div>
+            <div class="product-info">
+                <h3>${product.name}</h3>
+                <div class="price-info">
+                    <span class="price">${product.price}</span>
+                    ${originalPriceHTML}
+                </div>
+                ${extraPromoHTML}
+                <div class="meta-info">
+                    ${unitsSoldHTML}
+                    <span class="shipping">${product.shipping}</span>
+                </div>
+            </div>
+        `;
+        productListings.appendChild(productCard);
+    });
+}
     // --- Search Functionality ---
     function performSearch() {
         const query = searchInput.value.trim().toLowerCase();
