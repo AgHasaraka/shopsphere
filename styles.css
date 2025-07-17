@@ -188,11 +188,13 @@ body {
 }
 /* ADD THESE NEW STYLES TO THE BOTTOM OF YOUR CSS FILE */
 
+/* Replace old .promo-line and .extra-promo with these */
 .promo-line {
     display: flex;
     align-items: center;
     gap: 8px; /* Adds space between items */
     margin-top: 6px;
+    height: 22px; /* Give it a fixed height */
 }
 
 .promo-line .sale-badge {
@@ -246,6 +248,9 @@ body {
 }
 
 /* Remove margin from meta-info as it is no longer used for this */
+/* Update the meta-info style */
 .meta-info {
-    margin-top: 0;
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-light);
 }
