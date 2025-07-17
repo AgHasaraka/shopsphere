@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Failed to load products:', error);
-            productListings.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">Could not load products. Please try again later.</p>`;
+            productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">Could not load products. Please try again later.</p>`;
         });
 
     // --- Populate Hero Section ---
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayProducts(products) {
         productListings.innerHTML = '';
         if (products.length === 0) {
-            productListings.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">No products match your search.</p>`;
+            productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">No products match your search.</p>`;
             return;
         }
         products.forEach(product => {
@@ -59,12 +59,29 @@ document.addEventListener('DOMContentLoaded', () => {
             productCard.href = product.link;
             productCard.target = '_blank';
             productCard.classList.add('product-card');
+
+            // Conditionally add the sale badge if it exists
+            const saleBadgeHTML = product.sale_badge ? `<span class="sale-badge">${product.sale_badge}</span>` : '';
+            
+            // Conditionally add the original price if it exists
+            const originalPriceHTML = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
+
+            // Conditionally add units sold if it exists
+            const unitsSoldHTML = product.units_sold ? `<span class="units-sold">${product.units_sold} sold</span>` : '';
+
             productCard.innerHTML = `
-                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
+                <div class="product-image-container">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
+                    ${saleBadgeHTML}
+                </div>
                 <div class="product-info">
                     <h3>${product.name}</h3>
                     <div class="price-info">
                         <span class="price">${product.price}</span>
+                        ${originalPriceHTML}
+                    </div>
+                    <div class="meta-info">
+                        ${unitsSoldHTML}
                         <span class="shipping">${product.shipping}</span>
                     </div>
                 </div>
