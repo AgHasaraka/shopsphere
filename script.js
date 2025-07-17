@@ -60,22 +60,15 @@ function displayProducts(products) {
         productCard.target = '_blank';
         productCard.classList.add('product-card');
 
-        // Conditionally add the sale badge if it exists
+        // Conditionally create the HTML for each piece of data
         const saleBadgeHTML = product.sale_badge ? `<span class="sale-badge">${product.sale_badge}</span>` : '';
-        
-        // Conditionally add the original price if it exists
         const originalPriceHTML = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
-
-        // Conditionally add units sold if it exists
         const unitsSoldHTML = product.units_sold ? `<span class="units-sold">${product.units_sold} sold</span>` : '';
-        
-        // Conditionally add the extra promo text if it exists
-        const extraPromoHTML = product.extra_promo ? `<div class="extra-promo">${product.extra_promo}</div>` : '';
+        const extraPromoHTML = product.extra_promo ? `<span class="extra-promo">${product.extra_promo}</span>` : '';
 
         productCard.innerHTML = `
             <div class="product-image-container">
                 <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
-                ${saleBadgeHTML}
                 <div class="cart-icon-overlay"><i class="fas fa-shopping-cart"></i></div>
             </div>
             <div class="product-info">
@@ -84,7 +77,10 @@ function displayProducts(products) {
                     <span class="price">${product.price}</span>
                     ${originalPriceHTML}
                 </div>
-                ${extraPromoHTML}
+                <div class="promo-line">
+                    ${saleBadgeHTML}
+                    ${extraPromoHTML}
+                </div>
                 <div class="meta-info">
                     ${unitsSoldHTML}
                     <span class="shipping">${product.shipping}</span>
