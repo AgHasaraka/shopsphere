@@ -208,7 +208,7 @@ body {
 
 .extra-promo {
     color: var(--font-promo-red);
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bold; /* This will now apply correctly */
 }
 /* ADD THESE NEW STYLES TO THE BOTTOM OF YOUR CSS FILE */
