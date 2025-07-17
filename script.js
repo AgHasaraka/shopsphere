@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Populate Hero Section ---
     function populateHero(product) {
         document.getElementById('hero-product-image-container').innerHTML = `
-            <img src="${product.image}" alt="${product.name}" id="hero-product-image">
+            <img src="${product.image}" alt="${product.name}" id="hero-product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
         `;
         document.getElementById('hero-product-name').textContent = product.name;
         document.getElementById('hero-product-price').textContent = product.price;
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             productCard.target = '_blank';
             productCard.classList.add('product-card');
             productCard.innerHTML = `
-                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.onerror=null;this.src='placeholder.svg';">
                 <div class="product-info">
                     <h3>${product.name}</h3>
                     <div class="price-info">
