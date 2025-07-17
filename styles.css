@@ -209,3 +209,43 @@ body {
     font-size: 12px;
     font-weight: 500;
 }
+/* ADD THESE NEW STYLES TO THE BOTTOM OF YOUR CSS FILE */
+
+.rating-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    height: 20px; /* Give it a fixed height */
+}
+
+.star-rating {
+    display: flex;
+    align-items: center;
+}
+
+.star-rating .fa-star {
+    font-size: 14px;
+    color: #d8d8d8; /* Color for empty stars */
+}
+
+.star-rating .fa-star.filled {
+    color: #ffc107; /* Gold color for filled stars */
+}
+
+.units-sold {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+/* Update promo-line to better fit shipping text */
+.promo-line {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+/* Remove margin from meta-info as it is no longer used for this */
+.meta-info {
+    margin-top: 0;
+}
