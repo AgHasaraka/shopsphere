@@ -1,7 +1,7 @@
 /* --- Google Font --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* --- CSS Variables (NEW Light Theme) --- */
+/* --- CSS Variables (Light Theme) --- */
 :root {
     --bg-white: #FFFFFF;
     --bg-light-gray: #f8f8f8;
@@ -21,14 +21,12 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
     font-family: var(--font-main);
     background-color: var(--bg-light-gray);
     color: var(--text-dark);
     line-height: 1.6;
 }
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -241,21 +239,6 @@ body {
     margin-bottom: auto; /* Pushes price to the bottom */
     color: var(--font-blue); /* Blue font */
 }
-.product-card .price-info {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.product-card .price {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--font-red); /* Red font */
-}
-.product-card .shipping {
-    font-size: 14px;
-    color: var(--text-light);
-}
 
 /* --- Search Suggestions --- */
 .search-suggestions {
@@ -287,6 +270,46 @@ body {
     border-top: 1px solid var(--border-color);
     padding: 30px 0;
     text-align: center;
+    color: var(--text-light);
+}
+
+/* --- Sales Detail Styles --- */
+.product-image-container {
+    position: relative;
+}
+.sale-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: var(--font-red);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.price-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+.product-card .price {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--font-red); /* Red font */
+}
+.original-price {
+    font-size: 16px;
+    color: var(--text-light);
+    text-decoration: line-through;
+}
+.meta-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 14px;
     color: var(--text-light);
 }
 
