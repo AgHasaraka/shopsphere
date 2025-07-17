@@ -208,7 +208,7 @@ body {
 
 .extra-promo {
     color: var(--font-promo-red);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold; /* This will now apply correctly */
 }
 /* ADD THESE NEW STYLES TO THE BOTTOM OF YOUR CSS FILE */
@@ -253,6 +253,6 @@ body {
 /* Update the meta-info style */
 .meta-info {
     margin-top: 4px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-dark); /* Changed from --text-light */
 }
