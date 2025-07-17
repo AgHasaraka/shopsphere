@@ -90,7 +90,7 @@ body {
 #product-listings {
     display: grid;
     /* Denser grid with smaller minimum width */
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     justify-content: center;
 }
