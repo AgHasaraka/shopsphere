@@ -154,7 +154,7 @@ body {
 }
 .extra-promo {
     color: var(--font-promo-red);
-    font-size: 12px;
+    font-size: 18px;
     font-weight: bold; /* Changed from 500 */
 }
 .meta-info {
