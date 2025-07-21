@@ -98,13 +98,12 @@ body {
 }
 .product-card {
     background-color: var(--bg-white);
-    border-radius: var(--border-radius);
+    border-radius: 0; /* Changed for sharp corners */
     overflow: hidden;
     text-decoration: none;
     color: var(--text-dark);
     display: flex;
     flex-direction: column;
-    /* Add a subtle shadow by default and transition effect */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.3s, transform 0.3s;
 }
@@ -132,10 +131,6 @@ body {
 /* --- Sales Detail Styles --- */
 .product-image-container {
     position: relative;
-    /* Add these lines to round the top corners of the image */
-    border-top-left-radius: var(--border-radius);
-    border-top-right-radius: var(--border-radius);
-    overflow: hidden;
 }
 .product-image {
     width: 100%;
