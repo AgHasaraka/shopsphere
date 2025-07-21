@@ -132,6 +132,10 @@ body {
 /* --- Sales Detail Styles --- */
 .product-image-container {
     position: relative;
+    /* Add these lines to round the top corners of the image */
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    overflow: hidden;
 }
 .product-image {
     width: 100%;
