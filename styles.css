@@ -148,8 +148,12 @@ body {
 .cart-icon-overlay:hover {
     background-color: var(--bg-white); transform: scale(1.1);
 }
+/* Reduces the space above the price */
 .price-info {
-    display: flex; align-items: center; gap: 8px; margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px; /* Changed from 8px */
 }
 .price {
     font-size: 16px;
@@ -222,12 +226,13 @@ body {
 }
 /* ADD THESE NEW STYLES TO THE BOTTOM OF YOUR CSS FILE */
 
+/* Reduces the space below the stars */
 .rating-line {
     display: flex;
     align-items: center;
     gap: 6px;
     margin-top: 4px;
-    margin-bottom: 6px;
+    /* margin-bottom: 6px; <-- This line is removed */
     height: 18px;
     font-size: 12px;
     color: var(--text-dark);
