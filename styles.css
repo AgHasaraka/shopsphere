@@ -3,7 +3,7 @@
 
 /* --- CSS Variables (Marketplace Theme) --- */
 :root {
-    --bg-white: #FFFFFF;
+    --bg-white: #f8f8f8;
     --bg-light-gray: #f8f8f8;
     --font-promo-red: #d9534f;
     --text-dark: #333333;
@@ -104,13 +104,13 @@ body {
     color: var(--text-dark);
     display: flex;
     flex-direction: column;
-    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s, transform 0.3s;*/
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s, transform 0.3s;
 }
 .product-card:hover {
     /* Make the shadow stronger and lift the card on hover */
-    /*box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    transform: translateY(-4px);*/
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
 }
 .product-card .product-info {
     padding: 10px;
