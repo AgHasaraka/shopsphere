@@ -1,23 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- Sticky Header ---
-    let lastScrollY = window.scrollY;
-    const header = document.querySelector('.header');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > lastScrollY && window.scrollY > 150) {
-            header.classList.add('hidden');
-        } else {
-            header.classList.remove('hidden');
-        }
-        lastScrollY = window.scrollY;
-    });
-
-    // --- Global Variables ---
     let allProducts = [];
     const searchInput = document.getElementById('searchInput');
     const searchButton = document.getElementById('searchButton');
     const searchSuggestions = document.getElementById('searchSuggestions');
     const productListings = document.getElementById('product-listings');
+
+    // --- NEW: Function to shuffle the product array ---
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+        }
+    }
 
     // --- Fetch and Display Products ---
     fetch('products.json')
@@ -26,22 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
+            shuffleArray(data); // <-- NEW: Shuffle the products before displaying
             allProducts = data;
-            if (allProducts.length > 0) {
-                // The hero section is hidden by CSS, so we display all products directly
-                displayProducts(allProducts); 
-            }
+            displayProducts(allProducts);
         })
         .catch(error => {
             console.error('Failed to load products:', error);
-            productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">Could not load products. Please try again later.</p>`;
+            productListings.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">Could not load products. Please try again later.</p>`;
         });
-        
+
     // --- Display Products in Grid ---
     function displayProducts(products) {
         productListings.innerHTML = '';
         if (products.length === 0) {
-            productListings.innerHTML = `<p style="text-align: center; color: var(--text-light);">No products match your search.</p>`;
+            productListings.innerHTML = `<p style="text-align: center; color: var(--text-secondary);">No products match your search.</p>`;
             return;
         }
         products.forEach(product => {
@@ -50,14 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
             productCard.target = '_blank';
             productCard.classList.add('product-card');
 
-            // --- Generate HTML for different parts ---
             const saleBadgeHTML = product.sale_badge ? `<span class="sale-badge">${product.sale_badge}</span>` : '';
             const originalPriceHTML = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
             const unitsSoldHTML = product.units_sold ? `<span class="units-sold">${product.units_sold} sold</span>` : '';
             const extraPromoHTML = product.extra_promo ? `<span class="extra-promo">${product.extra_promo}</span>` : '';
             const shippingHTML = product.shipping ? `<span class="shipping">${product.shipping}</span>` : '';
             
-            // Generate star icons based on rating
             let starsHTML = '';
             if (product.rating) {
                 starsHTML += '<div class="star-rating">';
@@ -126,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             searchSuggestions.style.display = 'block';
         } else {
-            // When the search bar is empty, hide suggestions and show all products again
             searchSuggestions.style.display = 'none';
             displayProducts(allProducts);
         }
