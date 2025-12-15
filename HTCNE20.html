@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTC NE20 Translator Earphones - Christmas Sale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Custom scrollbar for thumbnails */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Smooth fade for image gallery */
+        .fade-enter {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .fade-enter-active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Announcement Bar -->
+    <div class="bg-red-600 text-white text-center text-sm font-medium py-2 px-4">
+        🎄 Christmas Sale Ends Soon! Free Shipping on all orders.
+    </div>
+
+    <!-- Navigation (Simple) -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="bg-black text-white px-2 py-1 font-bold rounded text-lg">HTC</span>
+                    <span class="font-semibold text-lg tracking-tight">Audio Store</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="#reviews" class="hidden sm:block text-gray-500 hover:text-gray-900">Reviews</a>
+                    <a href="https://s.click.aliexpress.com/e/_c3PVyIkh" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+                        Buy on AliExpress
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start">
+            
+            <!-- Image Gallery Section -->
+            <div class="flex flex-col-reverse lg:flex-row gap-4">
+                <!-- Thumbnails (Vertical on Desktop, Horizontal on Mobile) -->
+                <div class="flex lg:flex-col overflow-x-auto lg:overflow-y-auto lg:h-[600px] gap-3 scrollbar-hide py-2 lg:py-0 px-1 lg:px-0 lg:w-24 flex-shrink-0" id="thumbnail-container">
+                    <!-- Thumbnails injected by JS -->
+                </div>
+
+                <!-- Main Image -->
+                <div class="w-full relative bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden aspect-square lg:h-[600px] lg:w-auto flex-grow group">
+                    <img id="main-image" src="" alt="HTC NE20 Headphones" class="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-75%</div>
+                </div>
+            </div>
+
+            <!-- Product Info Section -->
+            <div class="mt-8 lg:mt-0 lg:sticky lg:top-24">
+                
+                <!-- Breadcrumb -->
+                <nav class="flex text-sm text-gray-500 mb-4">
+                    <ol class="flex items-center space-x-2">
+                        <li>Electronics</li>
+                        <li><i data-lucide="chevron-right" class="w-4 h-4"></i></li>
+                        <li>Audio</li>
+                        <li><i data-lucide="chevron-right" class="w-4 h-4"></i></li>
+                        <li class="text-gray-900 font-medium">Headphones</li>
+                    </ol>
+                </nav>
+
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-2">
+                    Translator HTC NE20 New Bluetooth 6.0 Wireless Headphones
+                </h1>
+                
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="flex text-yellow-400">
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star-half" class="w-4 h-4 fill-current"></i>
+                    </div>
+                    <span class="text-sm text-gray-600">4.8 (128 Reviews)</span>
+                    <span class="text-gray-300">|</span>
+                    <span class="text-sm text-gray-600">2,300+ Sold</span>
+                </div>
+
+                <!-- Sale Card (Matching Screenshot) -->
+                <div class="border-2 border-green-700 rounded-lg overflow-hidden mb-6">
+                    <div class="bg-green-700 text-white px-4 py-2 flex justify-between items-center flex-wrap gap-2">
+                        <div class="font-bold flex items-center gap-2">
+                            <span>CHRISTMAS SALE</span>
+                            <span class="text-green-100 font-normal text-sm">• Welcome deal</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm font-mono">
+                            <span>Ends:</span>
+                            <div class="flex gap-1">
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-hours">02</span>
+                                <span>:</span>
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-minutes">40</span>
+                                <span>:</span>
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-seconds">13</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4">
+                        <div class="flex items-baseline gap-3">
+                            <span class="text-4xl font-bold text-red-600">$12.30</span>
+                            <span class="text-lg text-gray-400 line-through decoration-gray-400">$49.48</span>
+                        </div>
+                        <div class="mt-1 flex items-center gap-2">
+                            <span class="bg-pink-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">
+                                <i data-lucide="arrow-down" class="w-3 h-3 inline"></i> Save $37.18
+                            </span>
+                            <span class="text-xs text-gray-500">Incl. import charges</span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500 flex items-center gap-1">
+                             <i data-lucide="coins" class="w-3 h-3"></i> Extra 1% off with coins
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Features Grid -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-blue-100 p-2 rounded-full text-blue-600">
+                            <i data-lucide="bluetooth" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Connectivity</p>
+                            <p class="text-sm font-medium">Bluetooth 6.0</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-blue-100 p-2 rounded-full text-blue-600">
+                            <i data-lucide="languages" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Feature</p>
+                            <p class="text-sm font-medium">Smart Translation</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-blue-100 p-2 rounded-full text-blue-600">
+                            <i data-lucide="droplets" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Rating</p>
+                            <p class="text-sm font-medium">IPX4 Waterproof</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-blue-100 p-2 rounded-full text-blue-600">
+                            <i data-lucide="battery-charging" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Battery</p>
+                            <p class="text-sm font-medium">Long Life</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping & Actions -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-sm text-green-700 font-medium">
+                        <i data-lucide="truck" class="w-4 h-4"></i>
+                        Free Shipping
+                    </div>
+                    
+                    <a href="https://s.click.aliexpress.com/e/_c3PVyIkh" target="_blank" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center font-bold text-lg py-4 rounded-xl shadow-lg shadow-red-200 transition-all hover:scale-[1.01] active:scale-[0.99]">
+                        Buy Now
+                    </a>
+                    
+                    <p class="text-center text-xs text-gray-500 mt-2">
+                        Secure transaction • 75-Day Buyer Protection
+                    </p>
+                </div>
+
+                <!-- Description Accordion -->
+                <div class="mt-8 border-t pt-6">
+                    <h3 class="font-bold text-lg mb-4">Product Description</h3>
+                    <div class="prose prose-sm text-gray-600">
+                        <p>Experience the future of communication with the HTC NE20. These earbuds aren't just for music; they are your personal translator. Featuring the latest Bluetooth 6.0 technology, enjoy ultra-low latency and stable connections.</p>
+                        <ul class="list-disc pl-5 space-y-1 mt-2">
+                            <li><strong>Real-time Translation:</strong> Break language barriers instantly.</li>
+                            <li><strong>IPX4 Waterproof:</strong> Sweat and splash resistant for active lifestyles.</li>
+                            <li><strong>Crystal Clear Audio:</strong> High-fidelity sound for music and calls.</li>
+                            <li><strong>Ergonomic Design:</strong> Comfortable fit for all-day wear.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Trust Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 mt-12 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-lg font-bold mb-6">Why shop with us?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Secure Payment</h3>
+                    <p class="text-sm text-gray-500">Your information is safe with us.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="truck" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Free Shipping</h3>
+                    <p class="text-sm text-gray-500">Delivery to your doorstep at no cost.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="rotate-ccw" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Easy Returns</h3>
+                    <p class="text-sm text-gray-500">75-day buyer protection policy.</p>
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-12">&copy; 2024 Product Page Demo. This page contains affiliate links.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Image Data (Reconstructed from user input)
+        // I added the base prefix to the broken links provided in the prompt
+        const images = [
+            "https://ae-pic-a1.aliexpress-media.com/kf/Sbc1e69c9b42d4412bda285c110eaf4adl.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S1f27c9492a0d41e6bc6020c32312a5b2l.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/Sea2bfd6db8f54f9ca1c26cc283a5d770w.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S31ecd13dba3745a58bb59adc89b28e68S.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S4074a2f75038481e86f308784dd2e9f3n.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S1411c198b7fd41acaf90f4fdbd579fdax.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/Sdae69df20a4043febecc937651e2ed64V.jpg_960x960q75.jpg_.avif"
+        ];
+
+        const mainImage = document.getElementById('main-image');
+        const thumbnailContainer = document.getElementById('thumbnail-container');
+
+        // Set initial main image
+        mainImage.src = images[0];
+
+        // Render Thumbnails
+        images.forEach((src, index) => {
+            const thumbBtn = document.createElement('button');
+            thumbBtn.className = `w-20 h-20 flex-shrink-0 border-2 rounded-lg overflow-hidden transition-all ${index === 0 ? 'border-red-500' : 'border-transparent hover:border-gray-300'}`;
+            thumbBtn.innerHTML = `<img src="${src}" class="w-full h-full object-cover">`;
+            
+            thumbBtn.addEventListener('click', () => {
+                // Update Main Image
+                mainImage.style.opacity = '0.5';
+                setTimeout(() => {
+                    mainImage.src = src;
+                    mainImage.style.opacity = '1';
+                }, 150);
+
+                // Update active state styling
+                document.querySelectorAll('#thumbnail-container button').forEach(btn => {
+                    btn.classList.remove('border-red-500');
+                    btn.classList.add('border-transparent');
+                });
+                thumbBtn.classList.remove('border-transparent');
+                thumbBtn.classList.add('border-red-500');
+            });
+
+            thumbnailContainer.appendChild(thumbBtn);
+        });
+
+        // Countdown Timer Logic
+        // Set target date to 2 hours, 40 mins, 13 seconds from now (based on screenshot)
+        let totalSeconds = (2 * 3600) + (40 * 60) + 13;
+        
+        const updateTimer = () => {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.getElementById('timer-hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('timer-minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('timer-seconds').innerText = String(seconds).padStart(2, '0');
+
+            if (totalSeconds > 0) {
+                totalSeconds--;
+            }
+        };
+
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+
+    </script>
+</body>
+</html>
