@@ -1,1 +1,323 @@
-nuh
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Elk Earrings - Holiday Gift</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Custom scrollbar for thumbnails */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Adjust main image display for small items like jewelry */
+        #main-image-container {
+            height: 500px;
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #main-image {
+            object-fit: contain; /* Ensure the image fits nicely */
+            max-height: 100%;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Announcement Bar -->
+    <div class="bg-red-600 text-white text-center text-sm font-medium py-2 px-4">
+        🎁 Last-Minute Holiday Deals! Free Shipping on all jewelry.
+    </div>
+
+    <!-- Navigation (Simple) -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="bg-red-600 text-white px-2 py-1 font-bold rounded text-lg">XMAS</span>
+                    <span class="font-semibold text-lg tracking-tight">Holiday Gifts</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="#reviews" class="hidden sm:block text-gray-500 hover:text-gray-900">Reviews</a>
+                    <a href="https://s.click.aliexpress.com/e/_c3klgzxT" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+                        Shop Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start">
+            
+            <!-- Image Gallery Section -->
+            <div class="flex flex-col-reverse lg:flex-row gap-4">
+                <!-- Thumbnails (Vertical on Desktop, Horizontal on Mobile) -->
+                <div class="flex lg:flex-col overflow-x-auto lg:overflow-y-auto lg:h-[500px] gap-3 scrollbar-hide py-2 lg:py-0 px-1 lg:px-0 lg:w-24 flex-shrink-0" id="thumbnail-container">
+                    <!-- Thumbnails injected by JS -->
+                </div>
+
+                <!-- Main Image -->
+                <div id="main-image-container" class="w-full relative bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden group">
+                    <!-- NOTE: Images provided are for a Smart Ring, but are used as requested. -->
+                    <img id="main-image" src="" alt="Christmas Elk Earrings" class="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute top-4 left-4 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">NEW ITEM</div>
+                </div>
+            </div>
+
+            <!-- Product Info Section -->
+            <div class="mt-8 lg:mt-0 lg:sticky lg:top-24">
+                
+                <!-- Breadcrumb -->
+                <nav class="flex text-sm text-gray-500 mb-4">
+                    <ol class="flex items-center space-x-2">
+                        <li>Jewelry</li>
+                        <li><i data-lucide="chevron-right" class="w-4 h-4"></i></li>
+                        <li>Earrings</li>
+                        <li><i data-lucide="chevron-right" class="w-4 h-4"></i></li>
+                        <li class="text-gray-900 font-medium">Holiday Collection</li>
+                    </ol>
+                </nav>
+
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-2">
+                    1 Pair of Cute & Charming Christmas Elk Earrings
+                </h1>
+                <p class="text-xl text-red-600 font-semibold mb-4">2D Acrylic Cartoon Holiday Gift</p>
+                
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="flex text-yellow-400">
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star-half" class="w-4 h-4 fill-current"></i>
+                    </div>
+                    <span class="text-sm text-gray-600">4.9 (45 Reviews)</span>
+                    <span class="text-gray-300">|</span>
+                    <span class="text-sm text-gray-600">1,500+ Sold</span>
+                </div>
+
+                <!-- Sale Card (Adjusted for typical Jewelry Pricing) -->
+                <div class="border-2 border-green-700 rounded-lg overflow-hidden mb-6">
+                    <div class="bg-green-700 text-white px-4 py-2 flex justify-between items-center flex-wrap gap-2">
+                        <div class="font-bold flex items-center gap-2">
+                            <span>HOLIDAY DEAL</span>
+                            <span class="text-green-100 font-normal text-sm">• Final Stock</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm font-mono">
+                            <span>Ends:</span>
+                            <div class="flex gap-1">
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-hours">05</span>
+                                <span>:</span>
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-minutes">22</span>
+                                <span>:</span>
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-seconds">45</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4">
+                        <div class="flex items-baseline gap-3">
+                            <span class="text-4xl font-bold text-red-600">$1.49</span>
+                            <span class="text-lg text-gray-400 line-through decoration-gray-400">$3.99</span>
+                        </div>
+                        <div class="mt-1 flex items-center gap-2">
+                            <span class="bg-pink-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">
+                                <i data-lucide="arrow-down" class="w-3 h-3 inline"></i> Save 62%
+                            </span>
+                            <span class="text-xs text-gray-500">Price per pair</span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500 flex items-center gap-1">
+                             <i data-lucide="gift" class="w-3 h-3"></i> Perfect stocking stuffer!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Features Grid -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600">
+                            <i data-lucide="snowflake" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Theme</p>
+                            <p class="text-sm font-medium">Christmas Elk</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600">
+                            <i data-lucide="heart" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Material</p>
+                            <p class="text-sm font-medium">2D Acrylic</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600">
+                            <i data-lucide="package" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Item</p>
+                            <p class="text-sm font-medium">1 Pair</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600">
+                            <i data-lucide="gift" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Occasion</p>
+                            <p class="text-sm font-medium">Holiday Gift</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping & Actions -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-sm text-green-700 font-medium">
+                        <i data-lucide="truck" class="w-4 h-4"></i>
+                        Free Shipping Worldwide
+                    </div>
+                    
+                    <a href="https://s.click.aliexpress.com/e/_c3klgzxT" target="_blank" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center font-bold text-lg py-4 rounded-xl shadow-lg shadow-red-200 transition-all hover:scale-[1.01] active:scale-[0.99]">
+                        Buy Now
+                    </a>
+                    
+                    <p class="text-center text-xs text-gray-500 mt-2">
+                        Secure transaction • 90-Day Buyer Protection
+                    </p>
+                </div>
+
+                <!-- Description Accordion -->
+                <div class="mt-8 border-t pt-6">
+                    <h3 class="font-bold text-lg mb-4">Product Details</h3>
+                    <div class="prose prose-sm text-gray-600">
+                        <p>These adorable Christmas Elk earrings are the perfect way to show your holiday spirit! Lightweight and charming, they make a delightful gift for friends and family, or a festive treat for yourself.</p>
+                        <ul class="list-disc pl-5 space-y-1 mt-2">
+                            <li><strong>Charming Cartoon Design:</strong> Fun and festive 2D acrylic cutouts.</li>
+                            <li><strong>Ideal Holiday Accessory:</strong> Perfect for Christmas parties, family gatherings, or casual wear.</li>
+                            <li><strong>Lightweight Comfort:</strong> Easy to wear all day without strain.</li>
+                            <li><strong>Great Gift Idea:</strong> Ships ready to be a wonderful stocking stuffer or secret Santa gift.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Trust Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 mt-12 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-lg font-bold mb-6">Shop with confidence</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Secure Payment</h3>
+                    <p class="text-sm text-gray-500">Your information is safe and encrypted.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="truck" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Free Shipping</h3>
+                    <p class="text-sm text-gray-500">We offer complimentary shipping worldwide.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="rotate-ccw" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Buyer Protection</h3>
+                    <p class="text-sm text-gray-500">90-day money-back guarantee.</p>
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-12">&copy; 2024 Holiday Gifts Store. This page contains affiliate links.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Image Data (Note: These images are for a Smart Ring, but are used as requested)
+        const images = [
+            "https://ae-pic-a1.aliexpress-media.com/kf/Sa1c3ef5154574944bffda684a4e9ebedY.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S5dea121023e2469a9da08f4e09426cfcj.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S2afc093240a640958b07c6baa9a848e9o.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S89b1c89fdf734e5d8601cfdf950affbcN.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S2e0c76777d214a64a1e5d2806104ef2cs.png_960x960.png_.avif"
+        ];
+
+        const mainImage = document.getElementById('main-image');
+        const thumbnailContainer = document.getElementById('thumbnail-container');
+
+        // Set initial main image
+        if(images.length > 0) {
+            mainImage.src = images[0];
+        }
+
+        // Render Thumbnails
+        images.forEach((src, index) => {
+            const thumbBtn = document.createElement('button');
+            thumbBtn.className = `w-20 h-20 flex-shrink-0 border-2 rounded-lg overflow-hidden transition-all ${index === 0 ? 'border-red-500' : 'border-transparent hover:border-gray-300'}`;
+            thumbBtn.innerHTML = `<img src="${src}" class="w-full h-full object-cover">`;
+            
+            thumbBtn.addEventListener('click', () => {
+                // Update Main Image with Fade Effect
+                mainImage.style.opacity = '0.5';
+                setTimeout(() => {
+                    mainImage.src = src;
+                    mainImage.style.opacity = '1';
+                }, 150);
+
+                // Update active state styling
+                document.querySelectorAll('#thumbnail-container button').forEach(btn => {
+                    btn.classList.remove('border-red-500');
+                    btn.classList.add('border-transparent');
+                });
+                thumbBtn.classList.remove('border-transparent');
+                thumbBtn.classList.add('border-red-500');
+            });
+
+            thumbnailContainer.appendChild(thumbBtn);
+        });
+
+        // Countdown Timer Logic
+        // Starting from 5h 22m 45s for the demo
+        let totalSeconds = (5 * 3600) + (22 * 60) + 45;
+        
+        const updateTimer = () => {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.getElementById('timer-hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('timer-minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('timer-seconds').innerText = String(seconds).padStart(2, '0');
+
+            if (totalSeconds > 0) {
+                totalSeconds--;
+            }
+        };
+
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+
+    </script>
+</body>
+</html>
