@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Player - bobnk.mp4</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to ensure the video container is centered and has a nice aesthetic */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1f2937; /* Dark gray background for the body (Tailwind gray-800 equivalent) */
+        }
+        .video-container {
+            max-width: 90%;
+            width: 800px;
+        }
+        /* Custom styling for the video element itself to ensure it fills its container */
+        .video-element {
+            width: 100%;
+            height: auto;
+            min-height: 200px; /* Minimum size for mobile readability */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Content Container (changed from bg-white to bg-gray-800) -->
+    <div class="video-container bg-gray-800 shadow-xl rounded-xl overflow-hidden p-6 md:p-8">
+        <!-- Text color changed to white for contrast -->
+        <h1 class="text-3xl font-bold text-white mb-2">Secure Video Stream</h1>
+        <!-- Text color changed to light gray for contrast -->
+        <p class="text-gray-300 mb-6">Playing file: <code class="bg-gray-700 text-white p-1 rounded">bobnk.mp4</code>. The browser streams the video in chunks to prioritize viewing over downloading.</p>
+
+        <!-- Video Player Element -->
+        <div class="relative rounded-lg overflow-hidden border-4 border-indigo-500/50">
+            <!--
+                IMPORTANT ATTRIBUTES FOR STREAMING AND ANTI-DOWNLOAD:
+
+                1. controls: Shows the standard player interface (play/pause, volume, time).
+                2. controlsList="nodownload": Hides the download button in the player's context menu (Chromium browsers).
+                3. oncontextmenu="return false;": Prevents the user from right-clicking on the video to select "Save Video As...".
+                4. preload="metadata": Suggests to the browser to only fetch the video's metadata (duration, dimensions) on load, speeding up the initial page display and prioritizing streaming chunks during playback.
+                5. src="bobnk.mp4": **You MUST ensure this path is correct.** If the video is on your server, use the full URL here.
+            -->
+            <video 
+                class="video-element" 
+                controls 
+                controlsList="nodownload" 
+                oncontextmenu="return false;" 
+                preload="metadata"
+                poster="https://placehold.co/800x450/374151/ffffff?text=bobnk.mp4+Video+Placeholder"
+            >
+                <!-- Use the filename specified by the user. You must upload this file to your server. -->
+                <source src="bobnk.mp4" type="video/mp4">
+                
+                <!-- Fallback content if the browser does not support the video tag (colors adjusted for dark mode) -->
+                <p class="text-red-300 p-4 bg-red-900/50">
+                    Your browser does not support the video tag. Please try an updated browser like Chrome, Firefox, or Edge.
+                </p>
+            </video>
+        </div>
+
+    </div>
+
+</body>
+</html>
