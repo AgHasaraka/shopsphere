@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Soft Ceramic Bead Bracelet - Holiday Gift</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Custom scrollbar for thumbnails */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Adjust main image display for small items like jewelry */
+        #main-image-container {
+            height: 500px;
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #main-image {
+            object-fit: contain; /* Ensure the image fits nicely */
+            max-height: 100%;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Announcement Bar -->
+    <div class="bg-red-700 text-white text-center text-sm font-medium py-2 px-4">
+        🎅 FLASH SALE! Get an extra 10% off when you buy 2 or more items.
+    </div>
+
+    <!-- Navigation (Simple) -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="bg-red-600 text-white px-2 py-1 font-bold rounded text-lg">XMAS</span>
+                    <span class="font-semibold text-lg tracking-tight">Holiday Gifts</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="#details" class="hidden sm:block text-gray-500 hover:text-gray-900">Details</a>
+                    <a href="https://s.click.aliexpress.com/e/_c3ggJumV" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+                        Shop Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start">
+            
+            <!-- Image Gallery Section -->
+            <div class="flex flex-col-reverse lg:flex-row gap-4">
+                <!-- Thumbnails (Vertical on Desktop, Horizontal on Mobile) -->
+                <div class="flex lg:flex-col overflow-x-auto lg:overflow-y-auto lg:h-[500px] gap-3 scrollbar-hide py-2 lg:py-0 px-1 lg:px-0 lg:w-24 flex-shrink-0" id="thumbnail-container">
+                    <!-- Thumbnails injected by JS -->
+                </div>
+
+                <!-- Main Image -->
+                <div id="main-image-container" class="w-full relative bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden group">
+                    <img id="main-image" src="" alt="Christmas Snowman Beaded Bracelet" class="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">HOT ITEM</div>
+                </div>
+            </div>
+
+            <!-- Product Info Section -->
+            <div class="mt-8 lg:mt-0 lg:sticky lg:top-24">
+                
+                <!-- Breadcrumb -->
+                <nav class="flex text-sm text-gray-500 mb-4">
+                    <ol class="flex items-center space-x-2">
+                        <li>Jewelry & Accessories</li>
+                        <li><i data-lucide="chevron-right" class="w-4 h-4"></i></li>
+                        <li>Bracelets</li>
+                        <li><i data-lucide="chevron-right" class="w-4 h-4"></i></li>
+                        <li class="text-gray-900 font-medium">Bead Sets</li>
+                    </ol>
+                </nav>
+
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-2">
+                    Christmas Soft Ceramic Elastic Bead Set Bracelet
+                </h1>
+                <p class="text-xl text-red-600 font-semibold mb-4">Cartoon Snowman Versatile Holiday Bracelet</p>
+                
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="flex text-yellow-400">
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    </div>
+                    <span class="text-sm text-gray-600">5.0 (124 Orders)</span>
+                    <span class="text-gray-300">|</span>
+                    <span class="text-sm text-gray-600">900+ Sold</span>
+                </div>
+
+                <!-- Sale Card -->
+                <div class="border-2 border-green-700 rounded-lg overflow-hidden mb-6">
+                    <div class="bg-green-700 text-white px-4 py-2 flex justify-between items-center flex-wrap gap-2">
+                        <div class="font-bold flex items-center gap-2">
+                            <span>LAST CALL DEAL</span>
+                            <span class="text-green-100 font-normal text-sm">• Selling Fast!</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm font-mono">
+                            <span>Ends:</span>
+                            <div class="flex gap-1">
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-hours">05</span>
+                                <span>:</span>
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-minutes">22</span>
+                                <span>:</span>
+                                <span class="bg-white text-green-800 px-1 rounded" id="timer-seconds">45</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4">
+                        <div class="flex items-baseline gap-3">
+                            <span class="text-4xl font-bold text-red-600">$0.99</span>
+                            <span class="text-lg text-gray-400 line-through decoration-gray-400">$5.05</span>
+                        </div>
+                        <div class="mt-1 flex items-center gap-2">
+                            <span class="bg-pink-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded">
+                                <i data-lucide="arrow-down" class="w-3 h-3 inline"></i> Save 54%
+                            </span>
+                            <span class="text-xs text-gray-500">Exceptional Value</span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500 flex items-center gap-1">
+                             <i data-lucide="sparkles" class="w-3 h-3"></i> Adds festive sparkle to any outfit!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Features Grid -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600">
+                            <i data-lucide="snowflakes" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Design</p>
+                            <p class="text-sm font-medium">Cartoon Snowman</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600">
+                            <i data-lucide="hand" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Fit</p>
+                            <p class="text-sm font-medium">Elastic & Comfortable</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600">
+                            <i data-lucide="component" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Material</p>
+                            <p class="text-sm font-medium">Soft Ceramic Beads</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full text-red-600">
+                            <i data-lucide="calendar-check" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase font-semibold">Use</p>
+                            <p class="text-sm font-medium">Parties & Holidays</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping & Actions -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-sm text-green-700 font-medium">
+                        <i data-lucide="truck" class="w-4 h-4"></i>
+                        Expedited Holiday Shipping Available
+                    </div>
+                    
+                    <a href="https://s.click.aliexpress.com/e/_c3ggJumV" target="_blank" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center font-bold text-lg py-4 rounded-xl shadow-lg shadow-red-200 transition-all hover:scale-[1.01] active:scale-[0.99]">
+                        Buy Now
+                    </a>
+                    
+                    <p class="text-center text-xs text-gray-500 mt-2">
+                        Affiliate Link • Guaranteed secure checkout.
+                    </p>
+                </div>
+
+                <!-- Description Accordion -->
+                <div id="details" class="mt-8 border-t pt-6">
+                    <h3 class="font-bold text-lg mb-4">Bracelet Details</h3>
+                    <div class="prose prose-sm text-gray-600">
+                        <p>Celebrate the season with this charming, versatile bead bracelet! Featuring cute cartoon snowman charms, this piece is made with soft ceramic beads strung on an elastic band for a comfortable, one-size-fits-most design.</p>
+                        <ul class="list-disc pl-5 space-y-1 mt-2">
+                            <li><strong>Material:</strong> High-quality soft ceramic beads and durable elastic cord.</li>
+                            <li><strong>Style:</strong> Fun and festive, perfect for all ages during the holiday season.</li>
+                            <li><strong>Versatile:</strong> Great for wearing to holiday parties, gifting, or as an everyday accessory in December.</li>
+                            <li><strong>Easy On/Off:</strong> Elastic design means no fussy clasps!</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Trust Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 mt-12 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-lg font-bold mb-6">Your Holiday Purchase is Protected</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="credit-card" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Encrypted Payments</h3>
+                    <p class="text-sm text-gray-500">Pay safely with all major cards.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="clock" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Fast Processing</h3>
+                    <p class="text-sm text-gray-500">Orders ship within 24 hours.</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-3">
+                        <i data-lucide="gift" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold">Holiday Ready</h3>
+                    <p class="text-sm text-gray-500">Perfectly sized for stocking stuffers.</p>
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-12">&copy; 2024 Holiday Gifts Store. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Image Data from user input
+        const images = [
+            "https://ae-pic-a1.aliexpress-media.com/kf/Sd3e95eb5a5bb4c8fb2ac89f4b0d8f2ae4.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S33a7a6d6ed114f37b77e46087e3d17252.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S389470f435684c9a8e9afeb7ece056e3M.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/Sa9cc12d0747b41c099277c1c230b80d2m.jpg_960x960q75.jpg_.avif",
+            "https://ae-pic-a1.aliexpress-media.com/kf/S640f817f41d043a9ab6321a98b3719a3P.jpg_960x960q75.jpg_.avif"
+        ];
+
+        const mainImage = document.getElementById('main-image');
+        const thumbnailContainer = document.getElementById('thumbnail-container');
+
+        // Set initial main image
+        if(images.length > 0) {
+            mainImage.src = images[0];
+        }
+
+        // Render Thumbnails
+        images.forEach((src, index) => {
+            const thumbBtn = document.createElement('button');
+            thumbBtn.className = `w-20 h-20 flex-shrink-0 border-2 rounded-lg overflow-hidden transition-all ${index === 0 ? 'border-red-500' : 'border-transparent hover:border-gray-300'}`;
+            thumbBtn.innerHTML = `<img src="${src}" class="w-full h-full object-cover">`;
+            
+            thumbBtn.addEventListener('click', () => {
+                // Update Main Image with Fade Effect
+                mainImage.style.opacity = '0.5';
+                setTimeout(() => {
+                    mainImage.src = src;
+                    mainImage.style.opacity = '1';
+                }, 150);
+
+                // Update active state styling
+                document.querySelectorAll('#thumbnail-container button').forEach(btn => {
+                    btn.classList.remove('border-red-500');
+                    btn.classList.add('border-transparent');
+                });
+                thumbBtn.classList.remove('border-transparent');
+                thumbBtn.classList.add('border-red-500');
+            });
+
+            thumbnailContainer.appendChild(thumbBtn);
+        });
+
+        // Countdown Timer Logic
+        // Starting from 5h 22m 45s for the demo
+        let totalSeconds = (5 * 3600) + (22 * 60) + 45;
+        
+        const updateTimer = () => {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.getElementById('timer-hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('timer-minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('timer-seconds').innerText = String(seconds).padStart(2, '0');
+
+            if (totalSeconds > 0) {
+                totalSeconds--;
+            }
+        };
+
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+
+    </script>
+</body>
+</html>
