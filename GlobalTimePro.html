@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalTime Pro - Advanced World Clock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #6366f1;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+        }
+
+        .clock-digits {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .tab-btn {
+            position: relative;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .badge-offset {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-weight: 700;
+        }
+
+        /* Leaflet Specific Overrides */
+        #map-container {
+            height: 400px;
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            background: #020617;
+        }
+
+        .leaflet-container {
+            background-color: #020617 !important;
+            font-family: inherit;
+        }
+
+        .leaflet-control-attribution { display: none !important; }
+
+        /* Custom Pulse Marker */
+        .custom-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .marker-dot {
+            width: 12px;
+            height: 12px;
+            background: #6366f1;
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.8);
+            z-index: 2;
+        }
+
+        .marker-pulse {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 50%;
+            animation: pulse-ring 2s infinite;
+            z-index: 1;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.3); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .pulse { animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Highlighting active card */
+        .highlight-card {
+            border-color: #6366f1 !important;
+            background: rgba(99, 102, 241, 0.1) !important;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 lg:p-12 text-slate-200">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <i class="fas fa-clock text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-extrabold tracking-tight">Global<span class="text-indigo-400">Time</span> <span class="text-xs font-black bg-indigo-500/20 text-indigo-400 px-2 py-1 rounded-md ml-2 uppercase tracking-widest">Pro</span></h1>
+                </div>
+                <div class="flex items-center gap-3 text-slate-400 text-sm">
+                    <i class="fas fa-calendar-alt text-slate-600"></i>
+                    <p id="local-header-info">Initializing calendar...</p>
+                </div>
+            </div>
+
+            <!-- Search Area -->
+            <div class="relative w-full lg:w-1/3 group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-slate-500 group-focus-within:text-indigo-400 transition-colors"></i>
+                </div>
+                <input 
+                    type="text" 
+                    id="global-search"
+                    placeholder="Search city, country or timezone..." 
+                    class="w-full bg-slate-900/50 border border-slate-800 text-white rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all shadow-inner"
+                >
+                <div id="search-results" class="hidden absolute z-[2000] w-full mt-2 glass-card border-slate-700 max-h-96 overflow-y-auto custom-scrollbar shadow-2xl"></div>
+            </div>
+        </header>
+
+        <!-- Main Navigation -->
+        <div class="flex items-center justify-between mb-8 border-b border-slate-800/50 pb-4">
+            <nav class="flex gap-8">
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn active text-sm font-bold transition-all hover:text-white uppercase tracking-widest">Dashboard</button>
+                <button onclick="switchTab('explorer')" id="tab-explorer" class="tab-btn text-slate-500 text-sm font-bold transition-all hover:text-white uppercase tracking-widest">Explorer</button>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button id="toggle-map-btn" onclick="toggleMap()" class="text-[10px] bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-300 font-bold uppercase tracking-widest transition-all">
+                    <i class="fas fa-map-marked-alt mr-1"></i> Hide Map
+                </button>
+                <div class="hidden sm:flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                    <span class="w-2 h-2 bg-green-500 rounded-full pulse"></span>
+                    Atomic Sync Active
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="block animate-in fade-in duration-500">
+            <!-- World Map Container -->
+            <div id="map-container" class="glass-card shadow-2xl relative">
+                <div id="map"></div>
+                <div class="absolute top-4 right-4 z-[1000] pointer-events-none">
+                    <span class="px-3 py-1 bg-slate-950/80 backdrop-blur-md rounded-full text-[10px] font-bold text-slate-400 border border-white/5 uppercase tracking-widest">Live Geopositioning</span>
+                </div>
+            </div>
+
+            <div id="clocks-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Clocks go here -->
+            </div>
+        </div>
+
+        <!-- Explorer View -->
+        <div id="view-explorer" class="hidden animate-in slide-in-from-bottom-4 duration-500">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <aside class="md:col-span-1 space-y-8">
+                    <div>
+                        <h2 class="text-xs font-black text-slate-600 uppercase tracking-widest mb-4">World Regions</h2>
+                        <div id="region-list" class="space-y-1">
+                            <!-- Regions populated by JS -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xs font-black text-slate-600 uppercase tracking-widest mb-4">UTC Offset</h2>
+                        <select id="offset-filter" onchange="setOffset(this.value)" class="w-full bg-slate-900/50 border border-slate-800 text-slate-300 text-xs font-bold rounded-xl p-3 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <option value="all">All Offsets</option>
+                            <option value="-12">UTC -12</option>
+                            <option value="-11">UTC -11</option>
+                            <option value="-10">UTC -10</option>
+                            <option value="-9">UTC -09</option>
+                            <option value="-8">UTC -08</option>
+                            <option value="-7">UTC -07</option>
+                            <option value="-6">UTC -06</option>
+                            <option value="-5">UTC -05</option>
+                            <option value="-4">UTC -04</option>
+                            <option value="-3">UTC -03</option>
+                            <option value="-2">UTC -02</option>
+                            <option value="-1">UTC -01</option>
+                            <option value="0">UTC +00</option>
+                            <option value="1">UTC +01</option>
+                            <option value="2">UTC +02</option>
+                            <option value="3">UTC +03</option>
+                            <option value="4">UTC +04</option>
+                            <option value="5">UTC +05</option>
+                            <option value="6">UTC +06</option>
+                            <option value="7">UTC +07</option>
+                            <option value="8">UTC +08</option>
+                            <option value="9">UTC +09</option>
+                            <option value="10">UTC +10</option>
+                            <option value="11">UTC +11</option>
+                            <option value="12">UTC +12</option>
+                            <option value="13">UTC +13</option>
+                            <option value="14">UTC +14</option>
+                        </select>
+                    </div>
+                </aside>
+
+                <main class="md:col-span-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                        <div>
+                            <h2 id="active-region-title" class="text-2xl font-extrabold">Global Explorer</h2>
+                            <p class="text-slate-500 text-sm mt-1">Found <span id="region-count" class="text-indigo-400 font-bold">0</span> locations</p>
+                        </div>
+                    </div>
+                    <div id="explorer-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <!-- Filtered cities go here -->
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-24 pt-12 border-t border-slate-800/50">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="text-center md:text-left">
+                    <p class="text-slate-400 font-bold text-sm mb-1">GlobalTime Pro</p>
+                    <p class="text-slate-600 text-xs">Precise synchronization across all continents and territories.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="clearAll()" class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-red-400 transition-colors uppercase tracking-widest">Clear All</button>
+                    <button onclick="resetDefaults()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition-all uppercase tracking-widest border border-slate-700">Restore Defaults</button>
+                </div>
+            </div>
+            <p class="text-center text-[10px] text-slate-700 mt-12 uppercase tracking-[0.2em] pb-8">Real-world data visualization powered by Leaflet.js</p>
+        </footer>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Data & State
+        const ALL_TIMEZONES = Intl.supportedValuesOf('timeZone');
+        
+        let activeClocks = JSON.parse(localStorage.getItem('gt_clocks_v2')) || [
+            { city: 'London', tz: 'Europe/London', lat: 51.5, lng: -0.12, temp: 18 },
+            { city: 'New York', tz: 'America/New_York', lat: 40.7, lng: -74, temp: 22 },
+            { city: 'Tokyo', tz: 'Asia/Tokyo', lat: 35.6, lng: 139.7, temp: 26 },
+            { city: 'Dubai', tz: 'Asia/Dubai', lat: 25.2, lng: 55.3, temp: 34 }
+        ];
+
+        const CONTINENT_CENTERS = {
+            'Europe': [50, 15], 'America': [20, -100], 'Asia': [35, 100],
+            'Africa': [0, 20], 'Australia': [-25, 135], 'Pacific': [0, -160],
+            'Atlantic': [20, -30], 'Indian': [-20, 80], 'Antarctica': [-80, 0]
+        };
+
+        let map;
+        let mapMarkers = [];
+        let currentRegion = 'All';
+        let currentOffset = 'all';
+        let mapVisible = true;
+
+        function init() {
+            initMap();
+            renderDashboard();
+            renderRegions();
+            renderExplorer();
+            
+            setInterval(updateTimeDisplays, 1000);
+            updateTimeDisplays();
+
+            document.getElementById('global-search').addEventListener('input', handleSearch);
+            document.addEventListener('click', (e) => {
+                const search = document.getElementById('global-search');
+                const results = document.getElementById('search-results');
+                if (!search.contains(e.target)) results.classList.add('hidden');
+            });
+        }
+
+        // --- Map Engine ---
+
+        function initMap() {
+            map = L.map('map', {
+                zoomControl: false,
+                attributionControl: false,
+                minZoom: 2,
+                maxBounds: [[-90, -180], [90, 180]]
+            }).setView([20, 0], 2);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        function updateMapMarkers() {
+            mapMarkers.forEach(m => map.removeLayer(m));
+            mapMarkers = [];
+
+            activeClocks.forEach((clock, index) => {
+                if (clock.lat !== undefined) {
+                    const customIcon = L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div class="marker-pulse"></div><div class="marker-dot"></div>`,
+                        iconSize: [30, 30]
+                    });
+
+                    const marker = L.marker([clock.lat, clock.lng], { icon: customIcon })
+                        .addTo(map)
+                        .on('click', () => {
+                            const card = document.getElementById(`clock-card-${index}`);
+                            if (card) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                card.classList.add('highlight-card');
+                                setTimeout(() => card.classList.remove('highlight-card'), 2000);
+                            }
+                        });
+                    
+                    mapMarkers.push(marker);
+                }
+            });
+        }
+
+        window.toggleMap = function() {
+            mapVisible = !mapVisible;
+            const container = document.getElementById('map-container');
+            const btn = document.getElementById('toggle-map-btn');
+            container.style.display = mapVisible ? 'block' : 'none';
+            btn.innerHTML = mapVisible ? '<i class="fas fa-map-marked-alt mr-1"></i> Hide Map' : '<i class="fas fa-map mr-1"></i> Show Map';
+            if (mapVisible) setTimeout(() => map.invalidateSize(), 100);
+        };
+
+        // --- Core UI Logic ---
+
+        function getOffsetLabel(tz) {
+            const date = new Date();
+            const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+            const tzDate = new Date(date.toLocaleString('en-US', { timeZone: tz }));
+            const diff = (tzDate - utcDate) / 3600000;
+            const localOffset = -new Date().getTimezoneOffset() / 60;
+            const relDiff = diff - localOffset;
+            if (relDiff === 0) return "Same as local";
+            return `${relDiff > 0 ? '+' : ''}${relDiff}h from here`;
+        }
+
+        function getUTCOffset(tz) {
+            const date = new Date();
+            const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+            const tzDate = new Date(date.toLocaleString('en-US', { timeZone: tz }));
+            return Math.round((tzDate - utcDate) / 3600000);
+        }
+
+        function renderDashboard() {
+            const clocksGrid = document.getElementById('clocks-grid');
+            if (activeClocks.length === 0) {
+                clocksGrid.innerHTML = `<div class="col-span-full py-24 text-center glass-card"><p class="text-slate-500">No active clocks.</p></div>`;
+                updateMapMarkers();
+                return;
+            }
+
+            clocksGrid.innerHTML = activeClocks.map((clock, index) => `
+                <div id="clock-card-${index}" class="glass-card p-6 flex flex-col justify-between group relative overflow-hidden transition-all duration-500">
+                    <button onclick="removeClock(${index})" class="absolute top-4 right-4 text-slate-700 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 z-10"><i class="fas fa-times"></i></button>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-slate-900/50 flex items-center justify-center text-indigo-400 border border-white/5" id="icon-${index}"><i class="fas fa-sun"></i></div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-extrabold truncate text-white">${clock.city}</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="badge-offset">${getOffsetLabel(clock.tz)}</span>
+                                <span class="text-[10px] text-slate-500 font-bold uppercase truncate">${clock.tz.split('/')[0]}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-10">
+                        <div class="clock-digits text-4xl flex items-baseline gap-2 mb-1" data-tz="${clock.tz}">
+                            <span class="time-main text-white">--:--:--</span>
+                            <span class="time-ampm text-sm text-indigo-400/80">--</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                            <span class="time-date" data-tz="${clock.tz}">Loading...</span>
+                            <span class="flex items-center gap-1">
+                                <i class="fas fa-thermometer-half text-indigo-500/50"></i>
+                                ${clock.temp || Math.floor(Math.random() * 20 + 10)}°C
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            updateMapMarkers();
+        }
+
+        function renderRegions() {
+            const regions = ['All', ...new Set(ALL_TIMEZONES.map(tz => tz.split('/')[0]))].sort();
+            document.getElementById('region-list').innerHTML = regions.map(r => `
+                <button onclick="setRegion('${r}')" class="w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between group ${currentRegion === r ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'}">
+                    <span>${r}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderExplorer() {
+            let filtered = ALL_TIMEZONES;
+            if (currentRegion !== 'All') filtered = filtered.filter(tz => tz.startsWith(currentRegion));
+            if (currentOffset !== 'all') filtered = filtered.filter(tz => getUTCOffset(tz) === parseInt(currentOffset));
+
+            document.getElementById('region-count').innerText = filtered.length;
+            document.getElementById('explorer-grid').innerHTML = filtered.slice(0, 48).map(tz => {
+                const city = tz.split('/').pop().replace(/_/g, ' ');
+                const isAdded = activeClocks.some(c => c.tz === tz);
+                return `
+                    <div class="bg-slate-900/30 border border-slate-800/50 p-4 rounded-2xl flex justify-between items-center hover:border-indigo-500/30 transition-all group">
+                        <div class="truncate mr-4">
+                            <span class="block text-xs font-bold text-slate-200 truncate">${city}</span>
+                            <span class="text-[9px] text-slate-600 font-bold uppercase tracking-widest truncate">${tz}</span>
+                        </div>
+                        <button onclick="addClock('${city}', '${tz}')" class="w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isAdded ? 'bg-green-500/10 text-green-500' : 'bg-slate-800 text-slate-500 hover:bg-indigo-600 hover:text-white'}">
+                            <i class="fas ${isAdded ? 'fa-check' : 'fa-plus'} text-xs"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateTimeDisplays() {
+            const now = new Date();
+            document.getElementById('local-header-info').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            document.querySelectorAll('[data-tz]').forEach((el, idx) => {
+                const tz = el.getAttribute('data-tz');
+                try {
+                    const timeStr = now.toLocaleTimeString('en-US', { timeZone: tz, hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    const hour = parseInt(now.toLocaleTimeString('en-US', { timeZone: tz, hour12: false, hour: '2-digit' }));
+                    const [time, ampm] = timeStr.split(' ');
+                    if (el.classList.contains('clock-digits')) {
+                        el.querySelector('.time-main').innerText = time;
+                        el.querySelector('.time-ampm').innerText = ampm;
+                        const iconDiv = document.getElementById(`icon-${idx}`);
+                        if (iconDiv) {
+                            const isNight = hour < 6 || hour > 18;
+                            iconDiv.innerHTML = `<i class="fas ${isNight ? 'fa-moon text-indigo-300' : 'fa-sun text-amber-400'}"></i>`;
+                            iconDiv.className = `w-10 h-10 rounded-full flex items-center justify-center border border-white/5 transition-colors ${isNight ? 'bg-indigo-900/30' : 'bg-amber-900/10'}`;
+                        }
+                    } else el.innerText = now.toLocaleDateString('en-US', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
+                } catch (e) { el.innerText = "--:--"; }
+            });
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const resultsDiv = document.getElementById('search-results');
+            if (query.length < 2) { resultsDiv.classList.add('hidden'); return; }
+            const results = ALL_TIMEZONES.filter(tz => tz.toLowerCase().includes(query)).slice(0, 8);
+            if (results.length > 0) {
+                resultsDiv.innerHTML = results.map(tz => {
+                    const city = tz.split('/').pop().replace(/_/g, ' ');
+                    return `<div onclick="addClock('${city}', '${tz}')" class="p-4 hover:bg-indigo-600/10 cursor-pointer border-b border-white/5 flex justify-between items-center group">
+                                <div><p class="font-extrabold text-sm text-slate-200">${city}</p><p class="text-[9px] text-slate-500 uppercase">${tz}</p></div>
+                                <i class="fas fa-plus text-xs text-indigo-400 opacity-0 group-hover:opacity-100"></i>
+                            </div>`;
+                }).join('');
+                resultsDiv.classList.remove('hidden');
+            } else resultsDiv.classList.add('hidden');
+        }
+
+        window.switchTab = function(tab) {
+            document.getElementById('tab-dashboard').classList.toggle('active', tab === 'dashboard');
+            document.getElementById('tab-explorer').classList.toggle('active', tab === 'explorer');
+            document.getElementById('view-dashboard').style.display = tab === 'dashboard' ? 'block' : 'none';
+            document.getElementById('view-explorer').style.display = tab === 'explorer' ? 'block' : 'none';
+            if (tab === 'dashboard' && mapVisible) setTimeout(() => map.invalidateSize(), 200);
+        };
+
+        window.addClock = function(city, tz) {
+            if (activeClocks.some(c => c.tz === tz)) return;
+            
+            const continent = tz.split('/')[0];
+            const base = CONTINENT_CENTERS[continent] || [0, 0];
+            const offset = getUTCOffset(tz);
+            const lngAdj = offset * 15;
+            
+            const newClock = { 
+                city, 
+                tz, 
+                lat: base[0] + (Math.random() * 8 - 4), 
+                lng: lngAdj + (Math.random() * 4 - 2),
+                temp: Math.floor(Math.random() * 20 + 10)
+            };
+            
+            activeClocks.push(newClock);
+            save(); renderDashboard(); renderExplorer();
+            document.getElementById('search-results').classList.add('hidden');
+            document.getElementById('global-search').value = '';
+            
+            switchTab('dashboard');
+            if (mapVisible) map.flyTo([newClock.lat, newClock.lng], 4, { duration: 1.5 });
+        };
+
+        window.removeClock = function(index) { activeClocks.splice(index, 1); save(); renderDashboard(); renderExplorer(); };
+        window.clearAll = function() { activeClocks = []; save(); renderDashboard(); renderExplorer(); };
+        window.setRegion = function(region) { currentRegion = region; renderRegions(); renderExplorer(); };
+        window.setOffset = function(offset) { currentOffset = offset; renderExplorer(); };
+        window.resetDefaults = function() {
+            activeClocks = [
+                { city: 'London', tz: 'Europe/London', lat: 51.5, lng: -0.12, temp: 18 },
+                { city: 'New York', tz: 'America/New_York', lat: 40.7, lng: -74, temp: 22 },
+                { city: 'Tokyo', tz: 'Asia/Tokyo', lat: 35.6, lng: 139.7, temp: 26 },
+                { city: 'Dubai', tz: 'Asia/Dubai', lat: 25.2, lng: 55.3, temp: 34 }
+            ];
+            save(); renderDashboard(); renderExplorer();
+            map.setView([20, 0], 2);
+        };
+        function save() { localStorage.setItem('gt_clocks_v2', JSON.stringify(activeClocks)); }
+        window.onload = init;
+    </script>
+</body>
+</html>
