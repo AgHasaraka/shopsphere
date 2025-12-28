@@ -1,0 +1,12 @@
+{
+  "name": "tea-factory-webpage",
+  "version": "1.0.0",
+  "description": "Tea Factory Webpage with Contact Form",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
