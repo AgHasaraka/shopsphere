@@ -11,48 +11,48 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: #020617;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(192, 38, 211, 0.15) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(192, 38, 211, 0.12) 0px, transparent 50%);
             color: #f8fafc;
             min-height: 100vh;
         }
         .glass {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         }
         .voice-card {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid transparent;
             cursor: pointer;
         }
         .voice-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
         }
         .voice-card.active {
             background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(192, 38, 211, 0.1));
-            border-color: rgba(79, 70, 229, 0.4);
-            box-shadow: 0 0 25px rgba(79, 70, 229, 0.15);
+            border-color: rgba(79, 70, 229, 0.3);
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.1);
         }
         .tone-chip {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s ease;
         }
         .tone-chip:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.07);
         }
         .tone-chip.active {
-            background: linear-gradient(135deg, #4f46e5, #c026d3);
+            background: linear-gradient(135deg, #4f46e5, #9333ea);
             border-color: transparent;
             color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
         .preview-btn {
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.3);
             transition: all 0.2s;
         }
         .preview-btn:hover {
@@ -60,8 +60,8 @@
             background: rgba(79, 70, 229, 0.1);
         }
         .loader {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border: 2px solid #FFF;
             border-bottom-color: transparent;
             border-radius: 50%;
@@ -72,58 +72,58 @@
         
         .speed-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             background: #818cf8;
             cursor: pointer;
             border-radius: 50%;
             border: 3px solid #0f172a;
-            box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
         }
 
         .wave-bar {
             width: 3px;
             background: linear-gradient(to top, #4f46e5, #c026d3);
             border-radius: 10px;
-            transition: height 0.15s ease;
+            transition: height 0.1s ease;
         }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-12 flex items-center justify-center">
+<body class="p-4 md:p-8 flex items-center justify-center min-h-screen">
 
-    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <!-- Sidebar -->
-        <div class="lg:col-span-4 flex flex-col gap-6">
-            <div class="glass p-8 h-full flex flex-col max-h-[85vh]">
-                <!-- DAHAN Custom Logo -->
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-2xl shadow-indigo-500/40 relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="lg:col-span-4 flex flex-col h-full">
+            <div class="glass p-6 md:p-8 flex flex-col max-h-[90vh]">
+                <!-- DAHAN Custom Branded Logo -->
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                         <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 4V20M12 8V16M17 4V20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M4 12V10C4 5.58172 7.58172 2 12 2C16.4183 2 20 5.58172 20 10V12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M12 15V22M12 22L9 19M12 22L15 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <rect x="3" y="12" width="4" height="6" rx="1" fill="currentColor"/>
+                            <rect x="17" y="12" width="4" height="6" rx="1" fill="currentColor"/>
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-black tracking-tighter text-white">DAHAN</h1>
-                        <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.3em] leading-none">Studio Pro</p>
+                        <h1 class="text-xl font-extrabold tracking-tight text-white leading-tight">DAHAN STUDIO</h1>
+                        <p class="text-[9px] text-indigo-400 font-black uppercase tracking-[0.3em] opacity-80">AI Synthesis Core</p>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Voice Library</h2>
+                    <h2 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Voice Engine</h2>
                 </div>
                 
                 <div class="flex p-1 bg-white/5 rounded-xl mb-6 shrink-0 border border-white/5">
-                    <button class="filter-btn flex-1 py-2 text-[11px] font-bold rounded-lg bg-indigo-600 text-white transition-all" onclick="filterVoices('All', this)">ALL</button>
-                    <button class="filter-btn flex-1 py-2 text-[11px] font-medium rounded-lg text-slate-400 hover:text-white transition-all" onclick="filterVoices('Male', this)">MALE</button>
-                    <button class="filter-btn flex-1 py-2 text-[11px] font-medium rounded-lg text-slate-400 hover:text-white transition-all" onclick="filterVoices('Female', this)">FEMALE</button>
+                    <button class="filter-btn flex-1 py-1.5 text-[10px] font-bold rounded-lg bg-indigo-600 text-white transition-all shadow-md" onclick="filterVoices('All', this)">ALL</button>
+                    <button class="filter-btn flex-1 py-1.5 text-[10px] font-medium rounded-lg text-slate-400 hover:text-white transition-all" onclick="filterVoices('Male', this)">MALE</button>
+                    <button class="filter-btn flex-1 py-1.5 text-[10px] font-medium rounded-lg text-slate-400 hover:text-white transition-all" onclick="filterVoices('Female', this)">FEMALE</button>
                 </div>
 
-                <div class="space-y-2 overflow-y-auto pr-2 custom-scrollbar flex-grow" id="voiceList">
+                <div class="space-y-1.5 overflow-y-auto pr-1.5 custom-scrollbar flex-grow" id="voiceList">
                     <!-- Voices injected via JS -->
                 </div>
             </div>
@@ -131,164 +131,171 @@
 
         <!-- Main Workspace -->
         <div class="lg:col-span-8 flex flex-col gap-6">
-            <div class="glass p-8 md:p-10 flex-grow flex flex-col min-h-[550px]">
+            <div class="glass p-8 md:p-10 flex-grow flex flex-col min-h-[500px]">
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-8">
-                    <!-- Style Selection -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <!-- Performance Styles -->
                     <div>
-                        <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 block">Performance Tone</label>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 block">Performance Tone</label>
                         <div class="flex flex-wrap gap-2" id="toneList">
                             <!-- Tones injected via JS -->
                         </div>
                     </div>
 
-                    <!-- Speed -->
+                    <!-- Speed Control -->
                     <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">Pace Control</label>
-                            <span id="speedValue" class="text-xs font-bold text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded">1.0x</span>
+                        <div class="flex justify-between items-center mb-3">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">Playback Speed</label>
+                            <span id="speedValue" class="text-[10px] font-bold text-indigo-400 bg-indigo-400/10 px-2 py-0.5 rounded">1.0x</span>
                         </div>
-                        <input type="range" id="speedInput" min="0.5" max="2.0" step="0.1" value="1.0" class="speed-slider w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer">
+                        <input type="range" id="speedInput" min="0.5" max="2.0" step="0.1" value="1.0" class="speed-slider w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer">
                     </div>
                 </div>
 
                 <div class="relative flex-grow flex flex-col">
-                    <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-4 block">Script Editor</label>
-                    <textarea id="textInput" class="w-full flex-grow bg-white/[0.02] border border-white/5 rounded-2xl p-6 text-lg leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/30 resize-none transition-all placeholder:text-slate-600" placeholder="Paste your script here..."></textarea>
+                    <div class="flex justify-between items-end mb-3">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">Input Script</label>
+                        <span id="charCount" class="text-[10px] text-slate-600">0 characters</span>
+                    </div>
+                    <textarea id="textInput" class="w-full flex-grow bg-white/[0.02] border border-white/5 rounded-2xl p-6 text-lg leading-relaxed focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500/30 resize-none transition-all placeholder:text-slate-700" placeholder="Enter text to generate high-fidelity speech..."></textarea>
                 </div>
 
                 <div class="flex items-center justify-between mt-8">
-                    <div id="audioVisualizer" class="invisible flex items-end gap-1.5 h-10">
+                    <div id="audioVisualizer" class="invisible flex items-end gap-1.5 h-8">
                         <div class="wave-bar h-2"></div>
                         <div class="wave-bar h-4"></div>
-                        <div class="wave-bar h-8"></div>
-                        <div class="wave-bar h-5"></div>
+                        <div class="wave-bar h-6"></div>
                         <div class="wave-bar h-3"></div>
+                        <div class="wave-bar h-2"></div>
                     </div>
 
-                    <button id="generateBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-10 py-4 rounded-2xl font-bold flex items-center gap-3 transition-all active:scale-95 disabled:opacity-50 shadow-xl shadow-indigo-500/20">
-                        <span id="btnContent" class="flex items-center gap-3">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg>
-                            Synthesize Speech
+                    <button id="generateBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-8 py-3.5 rounded-2xl font-bold flex items-center gap-3 transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-indigo-900/20">
+                        <span id="btnContent" class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            Generate Audio
                         </span>
                         <span id="btnLoading" class="hidden"><span class="loader"></span></span>
                     </button>
                 </div>
             </div>
 
-            <!-- Player -->
-            <div id="playerWidget" class="glass p-6 hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div class="flex items-center gap-6">
-                    <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+            <!-- Player UI -->
+            <div id="playerWidget" class="glass p-5 hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div class="flex items-center gap-5">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
                     </div>
                     <div class="flex-grow">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest" id="nowPlaying">Output Ready</span>
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="text-[9px] font-black text-indigo-400 uppercase tracking-widest" id="nowPlaying">Studio Render</span>
                         </div>
-                        <audio id="audioElement" controls class="w-full h-8 brightness-90"></audio>
+                        <audio id="audioElement" controls class="w-full h-8 opacity-80 hover:opacity-100 transition-opacity"></audio>
                     </div>
-                    <button id="downloadBtn" class="p-4 hover:bg-white/5 rounded-2xl transition-all text-slate-400 hover:text-white" title="Export Audio">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <button id="downloadBtn" class="p-3.5 hover:bg-white/5 rounded-xl transition-all text-slate-500 hover:text-white" title="Download WAV">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Error Modal -->
-    <div id="errorModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6">
-        <div class="bg-slate-900 border border-red-500/30 p-8 rounded-3xl max-w-sm w-full text-center">
-            <div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
-            <h3 class="text-xl font-bold mb-2">System Error</h3>
-            <p id="errorMessage" class="text-slate-400 text-sm mb-6">Failed to connect to the voice engine.</p>
-            <button onclick="document.getElementById('errorModal').classList.add('hidden')" class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-all">Dismiss</button>
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6">
+        <div class="bg-slate-900 border border-white/10 p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
+            <div id="modalIcon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"></div>
+            <h3 id="modalTitle" class="text-xl font-bold mb-2">Notice</h3>
+            <p id="modalMessage" class="text-slate-400 text-sm mb-6"></p>
+            <button onclick="document.getElementById('feedbackModal').classList.add('hidden')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold transition-all">Continue</button>
         </div>
     </div>
 
     <script>
-        // GitHub Pages Deployment Note: 
-        // Ensure this file is named index.html in the root of your repo.
-        const apiKey = "";
+        const apiKey = ""; // Set dynamically by environment
         let selectedVoice = "Charon";
         let selectedTone = "Neutral";
         let currentFilter = "All";
         
         const voices = [
-            { name: "Charon", desc: "Deep & Narrative", gender: "M" },
-            { name: "Puck", desc: "Friendly & Youthful", gender: "M" },
-            { name: "Fenrir", desc: "Strong & Authoritative", gender: "M" },
-            { name: "Orus", desc: "Warm & Relatable", gender: "M" },
-            { name: "Enceladus", desc: "Resonant & Bold", gender: "M" },
-            { name: "Iapetus", desc: "Wise & Trustworthy", gender: "M" },
-            { name: "Umbriel", desc: "Mysterious & Cool", gender: "M" },
-            { name: "Kore", desc: "Professional & Clear", gender: "F" },
-            { name: "Zephyr", desc: "Airy & Gentle", gender: "F" },
-            { name: "Leda", desc: "Elegant & Sophisticated", gender: "F" },
-            { name: "Aoede", desc: "Lyrical & Sweet", gender: "F" },
-            { name: "Callirrhoe", desc: "Soft & Calm", gender: "F" },
-            { name: "Autonoe", desc: "Energetic & Bright", gender: "F" },
-            { name: "Algieba", desc: "Clear & Concise", gender: "F" },
-            { name: "Despina", desc: "Warm & Friendly", gender: "F" },
-            { name: "Erinome", desc: "Balanced & Professional", gender: "F" }
+            { name: "Charon", desc: "Cinematic Narrator", gender: "M" },
+            { name: "Puck", desc: "Vibrant & Dynamic", gender: "M" },
+            { name: "Fenrir", desc: "Deep & Authoritative", gender: "M" },
+            { name: "Orus", desc: "Warm & Conversational", gender: "M" },
+            { name: "Enceladus", desc: "Heavy & Powerful", gender: "M" },
+            { name: "Iapetus", desc: "Wise Elder", gender: "M" },
+            { name: "Umbriel", desc: "Smooth & Atmospheric", gender: "M" },
+            { name: "Kore", desc: "Corporate Professional", gender: "F" },
+            { name: "Zephyr", desc: "Ethereal & Calm", gender: "F" },
+            { name: "Leda", desc: "Elegant & Mature", gender: "F" },
+            { name: "Aoede", desc: "Melodic & Sweet", gender: "F" },
+            { name: "Callirrhoe", desc: "Gentle Narrator", gender: "F" },
+            { name: "Autonoe", desc: "High Energy", gender: "F" },
+            { name: "Algieba", desc: "Precision & Clarity", gender: "F" },
+            { name: "Despina", desc: "Friendly Assistant", gender: "F" },
+            { name: "Erinome", desc: "Neutral Standard", gender: "F" }
         ];
 
         const tones = [
             { label: "Neutral", prompt: "" },
-            { label: "Happy", prompt: "Say happily: " },
-            { label: "Sad", prompt: "Say sadly: " },
-            { label: "Excited", prompt: "Say excitedly: " },
-            { label: "Whisper", prompt: "Whisper: " },
-            { label: "Serious", prompt: "Say seriously: " }
+            { label: "Cheerful", prompt: "Say cheerfully: " },
+            { label: "Somber", prompt: "Say sadly: " },
+            { label: "Intense", prompt: "Say excitedly: " },
+            { label: "Whisper", prompt: "In a whisper: " },
+            { label: "Formal", prompt: "Say seriously: " }
         ];
 
-        function showError(msg) {
-            document.getElementById('errorMessage').innerText = msg;
-            document.getElementById('errorModal').classList.remove('hidden');
+        function showModal(title, msg, type = 'error') {
+            const icon = document.getElementById('modalIcon');
+            icon.className = `w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${type === 'error' ? 'bg-red-500/10 text-red-500' : 'bg-indigo-500/10 text-indigo-400'}`;
+            icon.innerHTML = type === 'error' ? '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>' : '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = msg;
+            document.getElementById('feedbackModal').classList.remove('hidden');
         }
 
         function renderVoiceList() {
-            const voiceList = document.getElementById('voiceList');
-            voiceList.innerHTML = '';
+            const list = document.getElementById('voiceList');
+            list.innerHTML = '';
             const filtered = voices.filter(v => currentFilter === 'All' || (currentFilter === 'Male' ? v.gender === 'M' : v.gender === 'F'));
 
             filtered.forEach(voice => {
                 const card = document.createElement('div');
-                card.className = `voice-card p-3 rounded-2xl flex items-center gap-4 ${voice.name === selectedVoice ? 'active' : ''}`;
+                card.className = `voice-card p-3 rounded-xl flex items-center gap-3 ${voice.name === selectedVoice ? 'active' : ''}`;
                 card.onclick = (e) => selectVoice(voice.name, card, e);
                 card.innerHTML = `
                     <div class="flex-grow min-w-0">
-                        <div class="flex items-center gap-2 mb-1">
-                            <h3 class="font-bold text-sm tracking-tight">${voice.name}</h3>
-                            <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-white/5 border border-white/5 font-bold text-slate-500">${voice.gender}</span>
+                        <div class="flex items-center gap-2 mb-0.5">
+                            <span class="font-bold text-xs text-white">${voice.name}</span>
+                            <span class="text-[8px] px-1 py-0.25 rounded bg-white/5 border border-white/5 text-slate-500 font-black">${voice.gender}</span>
                         </div>
-                        <p class="text-[11px] text-slate-500 truncate">${voice.desc}</p>
+                        <p class="text-[10px] text-slate-500 truncate font-medium">${voice.desc}</p>
                     </div>
-                    <button class="preview-btn p-2 rounded-xl transition-all" onclick="previewVoice('${voice.name}', this, event)">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <button class="preview-btn p-1.5 rounded-lg" onclick="previewVoice('${voice.name}', this, event)">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </button>
                 `;
-                voiceList.appendChild(card);
+                list.appendChild(card);
             });
         }
 
         function filterVoices(filter, btn) {
             currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(b => b.className = 'filter-btn flex-1 py-2 text-[11px] font-medium rounded-lg text-slate-400 hover:text-white transition-all');
-            btn.className = 'filter-btn flex-1 py-2 text-[11px] font-bold rounded-lg bg-indigo-600 text-white shadow-lg transition-all';
+            document.querySelectorAll('.filter-btn').forEach(b => b.className = 'filter-btn flex-1 py-1.5 text-[10px] font-medium rounded-lg text-slate-400 hover:text-white transition-all');
+            btn.className = 'filter-btn flex-1 py-1.5 text-[10px] font-bold rounded-lg bg-indigo-600 text-white transition-all shadow-md';
             renderVoiceList();
         }
 
         const toneList = document.getElementById('toneList');
         tones.forEach(tone => {
             const chip = document.createElement('button');
-            chip.className = `tone-chip px-5 py-2.5 rounded-xl text-xs font-bold ${tone.label === selectedTone ? 'active' : 'text-slate-500'}`;
+            chip.className = `tone-chip px-4 py-2 rounded-xl text-[10px] font-bold ${tone.label === selectedTone ? 'active' : 'text-slate-500'}`;
             chip.innerText = tone.label;
             chip.onclick = () => selectTone(tone.label, chip);
             toneList.appendChild(chip);
         });
+
+        document.getElementById('textInput').oninput = (e) => {
+            document.getElementById('charCount').innerText = `${e.target.value.length} characters`;
+        };
 
         const speedInput = document.getElementById('speedInput');
         speedInput.oninput = (e) => {
@@ -324,11 +331,11 @@
             return new Blob([buffer], { type: 'audio/wav' });
         }
 
-        async function fetchAudio(text, voiceName) {
+        async function apiCall(text, voiceName) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const delays = [1000, 2000, 4000, 8000, 16000];
             
-            let lastError;
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i <= delays.length; i++) {
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
@@ -337,111 +344,96 @@
                             contents: [{ parts: [{ text: `${voiceName}: ${text}` }] }],
                             generationConfig: {
                                 responseModalities: ["AUDIO"],
-                                speechConfig: {
-                                    voiceConfig: { prebuiltVoiceConfig: { voiceName: voiceName } }
-                                }
+                                speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voiceName } } }
                             }
                         })
                     });
                     
                     if (response.ok) return await response.json();
-                    
-                    if (response.status === 429 || response.status >= 500) {
-                        const delay = Math.pow(2, i) * 1000;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        continue;
-                    }
-                    
-                    const errData = await response.json();
-                    throw new Error(errData.error?.message || 'Synthesis failed');
+                    if (i === delays.length) throw new Error("Connection Timeout");
+                    await new Promise(r => setTimeout(r, delays[i]));
                 } catch (e) {
-                    lastError = e;
+                    if (i === delays.length) throw e;
                 }
             }
-            throw lastError;
         }
 
         async function previewVoice(voiceName, btn, event) {
             event.stopPropagation();
             const originalIcon = btn.innerHTML;
-            btn.innerHTML = `<span class="loader w-4 h-4"></span>`;
+            btn.innerHTML = `<span class="loader w-3 h-3"></span>`;
             try {
-                const res = await fetchAudio(`Hello, this is ${voiceName}.`, voiceName);
-                const audioData = res.candidates[0].content.parts[0].inlineData;
-                const sampleRate = parseInt(audioData.mimeType.split('rate=')[1]) || 24000;
-                const binary = atob(audioData.data);
-                const bytes = new Uint8Array(binary.length);
-                for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                const wav = pcmToWav(new Int16Array(bytes.buffer), sampleRate);
-                const audio = new Audio(URL.createObjectURL(wav));
-                audio.onended = () => { btn.innerHTML = originalIcon; };
+                const res = await apiCall(`Sample voice: ${voiceName}`, voiceName);
+                const data = res.candidates[0].content.parts[0].inlineData;
+                const sampleRate = parseInt(data.mimeType.split('rate=')[1]) || 24000;
+                const bin = atob(data.data);
+                const bytes = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+                const audio = new Audio(URL.createObjectURL(pcmToWav(new Int16Array(bytes.buffer), sampleRate)));
+                audio.onended = () => btn.innerHTML = originalIcon;
                 audio.play();
             } catch (e) { 
                 btn.innerHTML = originalIcon;
-                showError("Preview failed. Please check your network.");
+                showModal("API Alert", "Unable to load voice preview.");
             }
         }
 
-        async function generateSpeech() {
+        async function generate() {
             const text = document.getElementById('textInput').value.trim();
             if (!text) return;
 
             const btn = document.getElementById('generateBtn');
-            const visualizer = document.getElementById('audioVisualizer');
+            const vis = document.getElementById('audioVisualizer');
             const speed = parseFloat(speedInput.value);
 
             btn.disabled = true;
             document.getElementById('btnContent').classList.add('hidden');
             document.getElementById('btnLoading').classList.remove('hidden');
-            visualizer.classList.replace('invisible', 'flex');
+            vis.classList.remove('invisible');
 
-            const tonePrompt = tones.find(t => t.label === selectedTone).prompt;
-            const finalPrompt = `${tonePrompt}${text}`;
-
+            const tone = tones.find(t => t.label === selectedTone).prompt;
+            
             try {
-                const res = await fetchAudio(finalPrompt, selectedVoice);
-                const audioData = res.candidates[0].content.parts[0].inlineData;
-                const sampleRate = parseInt(audioData.mimeType.split('rate=')[1]) || 24000;
-                const binary = atob(audioData.data);
-                const bytes = new Uint8Array(binary.length);
-                for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                const wav = pcmToWav(new Int16Array(bytes.buffer), sampleRate);
-                const url = URL.createObjectURL(wav);
+                const res = await apiCall(`${tone}${text}`, selectedVoice);
+                const data = res.candidates[0].content.parts[0].inlineData;
+                const sampleRate = parseInt(data.mimeType.split('rate=')[1]) || 24000;
+                const bin = atob(data.data);
+                const bytes = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
                 
+                const url = URL.createObjectURL(pcmToWav(new Int16Array(bytes.buffer), sampleRate));
                 const audio = document.getElementById('audioElement');
                 audio.src = url;
                 audio.playbackRate = speed;
                 
                 document.getElementById('playerWidget').classList.remove('hidden');
-                document.getElementById('nowPlaying').innerText = `${selectedVoice} | ${selectedTone} | ${speed}x`;
+                document.getElementById('nowPlaying').innerText = `${selectedVoice.toUpperCase()} | ${selectedTone.toUpperCase()} | ${speed}x`;
                 
                 document.getElementById('downloadBtn').onclick = () => {
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `dahan_studio_${selectedVoice.toLowerCase()}.wav`;
+                    a.download = `DAHAN_${selectedVoice}_${Date.now()}.wav`;
                     a.click();
                 };
                 audio.play();
             } catch (err) {
-                showError(err.message || "Synthesis failed. Check connection.");
+                showModal("Engine Error", "Failed to generate voice. Please check API status.");
             } finally {
                 btn.disabled = false;
                 document.getElementById('btnContent').classList.remove('hidden');
                 document.getElementById('btnLoading').classList.add('hidden');
-                visualizer.classList.replace('flex', 'invisible');
+                vis.classList.add('invisible');
             }
         }
 
-        document.getElementById('generateBtn').onclick = generateSpeech;
+        document.getElementById('generateBtn').onclick = generate;
         renderVoiceList();
         
         setInterval(() => {
             if (!document.getElementById('audioVisualizer').classList.contains('invisible')) {
-                document.querySelectorAll('.wave-bar').forEach(bar => {
-                    bar.style.height = `${Math.floor(Math.random() * 30) + 5}px`;
-                });
+                document.querySelectorAll('.wave-bar').forEach(b => b.style.height = `${Math.random() * 20 + 4}px`);
             }
-        }, 120);
+        }, 100);
     </script>
 </body>
 </html>
