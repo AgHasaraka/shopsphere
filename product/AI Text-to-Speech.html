@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini AI Voice Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+        .voice-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .voice-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        .voice-card.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+        .tone-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+        .tone-chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .tone-chip.active {
+            background: #6366f1;
+            border-color: #818cf8;
+            color: white;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+        .preview-btn {
+            opacity: 0.6;
+            transition: all 0.2s;
+        }
+        .preview-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            color: #818cf8;
+        }
+        .loader {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        .mini-loader {
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .wave-bar {
+            width: 4px;
+            background: #6366f1;
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        input[type=range] {
+            accent-color: #6366f1;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex items-center justify-center">
+
+    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Panel: Voice Selection -->
+        <div class="lg:col-span-1 flex flex-col gap-4">
+            <div class="glass p-6 h-full flex flex-col max-h-[85vh]">
+                <h2 class="text-xl font-bold mb-2 flex items-center gap-2 shrink-0">
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    Select Voice
+                </h2>
+                
+                <!-- Gender Filter Buttons -->
+                <div class="flex p-1 bg-white/5 rounded-xl mb-4 shrink-0 border border-white/5">
+                    <button class="filter-btn flex-1 py-2 text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-lg transition-all" onclick="filterVoices('All', this)">All</button>
+                    <button class="filter-btn flex-1 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all" onclick="filterVoices('Male', this)">Male</button>
+                    <button class="filter-btn flex-1 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all" onclick="filterVoices('Female', this)">Female</button>
+                </div>
+
+                <div class="space-y-3 overflow-y-auto pr-2 custom-scrollbar flex-grow" id="voiceList">
+                    <!-- Voices injected via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Editor & Control -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+            <div class="glass p-8 flex-grow flex flex-col min-h-[500px]">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">AI Voice Studio</h1>
+                        <p class="text-slate-400 text-sm">Convert text to hyper-realistic speech</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Tone Selection -->
+                    <div>
+                        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 block">Tone & Style</label>
+                        <div class="flex flex-wrap gap-2" id="toneList">
+                            <!-- Tones injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Speed Controller -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Speech Speed</label>
+                            <span id="speedValue" class="text-xs font-bold text-indigo-400">1.0x</span>
+                        </div>
+                        <input type="range" id="speedInput" min="0.5" max="2.0" step="0.1" value="1.0" class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between mt-2 px-1">
+                            <span class="text-[10px] text-slate-500 font-bold">SLOW</span>
+                            <span class="text-[10px] text-slate-500 font-bold">FAST</span>
+                        </div>
+                    </div>
+                </div>
+
+                <textarea id="textInput" class="w-full flex-grow bg-transparent border border-white/10 rounded-xl p-4 text-lg focus:outline-none focus:border-indigo-500/50 resize-none transition-colors mb-6" placeholder="Type or paste your text here..."></textarea>
+
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <button id="generateBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-semibold flex items-center gap-3 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20">
+                            <span id="btnContent" class="flex items-center gap-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Generate Audio
+                            </span>
+                            <span id="btnLoading" class="hidden"><span class="loader"></span></span>
+                        </button>
+                    </div>
+
+                    <div id="audioVisualizer" class="hidden flex items-end gap-1 h-8 px-4">
+                        <div class="wave-bar h-2"></div>
+                        <div class="wave-bar h-4"></div>
+                        <div class="wave-bar h-6"></div>
+                        <div class="wave-bar h-3"></div>
+                        <div class="wave-bar h-5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player Widget -->
+            <div id="playerWidget" class="glass p-4 hidden animate-in slide-in-from-bottom-4 duration-500">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-indigo-500/20 rounded-lg">
+                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-sm font-medium" id="nowPlaying">Ready to play</p>
+                        <audio id="audioElement" controls class="w-full h-8 mt-2"></audio>
+                    </div>
+                    <button id="downloadBtn" class="p-3 hover:bg-white/5 rounded-full transition-colors" title="Download">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = "";
+        let selectedVoice = "Charon";
+        let selectedTone = "Neutral";
+        let currentFilter = "All";
+        
+        // Expanded Voice List with more Male voices
+        const voices = [
+            { name: "Charon", desc: "Deep & Narrative", gender: "M" },
+            { name: "Puck", desc: "Friendly & Youthful", gender: "M" },
+            { name: "Fenrir", desc: "Strong & Authoritative", gender: "M" },
+            { name: "Orus", desc: "Warm & Relatable", gender: "M" },
+            { name: "Enceladus", desc: "Resonant & Bold", gender: "M" },
+            { name: "Iapetus", desc: "Wise & Trustworthy", gender: "M" },
+            { name: "Umbriel", desc: "Mysterious & Cool", gender: "M" },
+            { name: "Kore", desc: "Professional & Clear", gender: "F" },
+            { name: "Zephyr", desc: "Airy & Gentle", gender: "F" },
+            { name: "Leda", desc: "Elegant & Sophisticated", gender: "F" },
+            { name: "Aoede", desc: "Lyrical & Sweet", gender: "F" },
+            { name: "Callirrhoe", desc: "Soft & Calm", gender: "F" },
+            { name: "Autonoe", desc: "Energetic & Bright", gender: "F" },
+            { name: "Algieba", desc: "Clear & Concise", gender: "F" },
+            { name: "Despina", desc: "Warm & Friendly", gender: "F" },
+            { name: "Erinome", desc: "Balanced & Professional", gender: "F" }
+        ];
+
+        const tones = [
+            { label: "Neutral", prompt: "" },
+            { label: "Happy", prompt: "Say happily: " },
+            { label: "Sad", prompt: "Say sadly: " },
+            { label: "Excited", prompt: "Say excitedly: " },
+            { label: "Whisper", prompt: "Whisper: " },
+            { label: "Serious", prompt: "Say seriously: " }
+        ];
+
+        // UI Initialization
+        function renderVoiceList() {
+            const voiceList = document.getElementById('voiceList');
+            voiceList.innerHTML = '';
+            const filtered = voices.filter(v => currentFilter === 'All' || (currentFilter === 'Male' ? v.gender === 'M' : v.gender === 'F'));
+
+            filtered.forEach(voice => {
+                const card = document.createElement('div');
+                card.className = `voice-card glass p-3 flex items-center gap-3 ${voice.name === selectedVoice ? 'active' : ''}`;
+                card.onclick = (e) => selectVoice(voice.name, card, e);
+                card.innerHTML = `
+                    <div class="flex-grow min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-semibold text-sm truncate">${voice.name}</h3>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 border border-white/10 uppercase font-bold text-slate-500">${voice.gender}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate">${voice.desc}</p>
+                    </div>
+                    <button class="preview-btn p-2 rounded-full bg-white/5 hover:bg-white/10 z-10" onclick="previewVoice('${voice.name}', this, event)">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                `;
+                voiceList.appendChild(card);
+            });
+        }
+
+        function filterVoices(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.className = 'filter-btn flex-1 py-2 text-xs font-medium rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all');
+            btn.className = 'filter-btn flex-1 py-2 text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-lg transition-all';
+            renderVoiceList();
+        }
+
+        // Initialize Tone chips
+        const toneList = document.getElementById('toneList');
+        tones.forEach(tone => {
+            const chip = document.createElement('button');
+            chip.className = `tone-chip px-4 py-2 rounded-full text-xs font-medium ${tone.label === selectedTone ? 'active' : 'text-slate-400'}`;
+            chip.innerText = tone.label;
+            chip.onclick = () => selectTone(tone.label, chip);
+            toneList.appendChild(chip);
+        });
+
+        // Speed listener
+        const speedInput = document.getElementById('speedInput');
+        speedInput.oninput = (e) => {
+            document.getElementById('speedValue').innerText = `${e.target.value}x`;
+        };
+
+        function selectVoice(name, element, event) {
+            if (event && event.target.closest('.preview-btn')) return;
+            selectedVoice = name;
+            document.querySelectorAll('.voice-card').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function selectTone(label, element) {
+            selectedTone = label;
+            document.querySelectorAll('.tone-chip').forEach(c => {
+                c.classList.remove('active');
+                c.classList.add('text-slate-400');
+            });
+            element.classList.remove('text-slate-400');
+            element.classList.add('active');
+        }
+
+        // PCM/WAV Utilities
+        function pcmToWav(pcmData, sampleRate) {
+            const buffer = new ArrayBuffer(44 + pcmData.length * 2);
+            const view = new DataView(buffer);
+            const writeStr = (o, s) => { for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i)); };
+            writeStr(0, 'RIFF'); view.setUint32(4, 36 + pcmData.length * 2, true); writeStr(8, 'WAVE'); writeStr(12, 'fmt ');
+            view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true); view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true); writeStr(36, 'data');
+            view.setUint32(40, pcmData.length * 2, true);
+            for (let i = 0; i < pcmData.length; i++) view.setInt16(44 + i * 2, pcmData[i], true);
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        async function fetchAudio(text, voiceName, speed = 1.0) {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: `${voiceName}: ${text}` }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            voiceConfig: {
+                                prebuiltVoiceConfig: { 
+                                    voiceName: voiceName
+                                }
+                            }
+                        }
+                    }
+                })
+            });
+            if (!response.ok) throw new Error('API Error');
+            return await response.json();
+        }
+
+        async function previewVoice(voiceName, btn, event) {
+            event.stopPropagation();
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = `<span class="mini-loader"></span>`;
+            try {
+                const res = await fetchAudio(`Hello, this is ${voiceName}.`, voiceName);
+                const audioData = res.candidates[0].content.parts[0].inlineData;
+                const sampleRate = parseInt(audioData.mimeType.split('rate=')[1]) || 24000;
+                const binary = atob(audioData.data);
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+                const wav = pcmToWav(new Int16Array(bytes.buffer), sampleRate);
+                const audio = new Audio(URL.createObjectURL(wav));
+                audio.onended = () => { btn.innerHTML = originalIcon; };
+                audio.play();
+            } catch (e) { btn.innerHTML = originalIcon; }
+        }
+
+        async function generateSpeech() {
+            const text = document.getElementById('textInput').value.trim();
+            if (!text) return;
+
+            const btn = document.getElementById('generateBtn');
+            const visualizer = document.getElementById('audioVisualizer');
+            const speed = parseFloat(speedInput.value);
+
+            btn.disabled = true;
+            document.getElementById('btnContent').classList.add('hidden');
+            document.getElementById('btnLoading').classList.remove('hidden');
+            visualizer.classList.remove('hidden');
+
+            const tonePrompt = tones.find(t => t.label === selectedTone).prompt;
+            const finalPrompt = `${tonePrompt}${text}`;
+
+            try {
+                const res = await fetchAudio(finalPrompt, selectedVoice);
+                const audioData = res.candidates[0].content.parts[0].inlineData;
+                const sampleRate = parseInt(audioData.mimeType.split('rate=')[1]) || 24000;
+                const binary = atob(audioData.data);
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+                const wav = pcmToWav(new Int16Array(bytes.buffer), sampleRate);
+                const url = URL.createObjectURL(wav);
+                
+                const audio = document.getElementById('audioElement');
+                audio.src = url;
+                audio.playbackRate = speed; // Apply speed controller
+                
+                document.getElementById('playerWidget').classList.remove('hidden');
+                document.getElementById('nowPlaying').innerText = `Voice: ${selectedVoice} | Tone: ${selectedTone} | Speed: ${speed}x`;
+                
+                document.getElementById('downloadBtn').onclick = () => {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `speech_${selectedVoice.toLowerCase()}.wav`;
+                    a.click();
+                };
+                audio.play();
+            } catch (err) {
+                alert("Generation failed. Check your connection.");
+            } finally {
+                btn.disabled = false;
+                document.getElementById('btnContent').classList.remove('hidden');
+                document.getElementById('btnLoading').classList.add('hidden');
+                visualizer.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('generateBtn').onclick = generateSpeech;
+        renderVoiceList();
+        
+        setInterval(() => {
+            document.querySelectorAll('.wave-bar').forEach(bar => {
+                bar.style.height = `${Math.floor(Math.random() * 24) + 4}px`;
+            });
+        }, 100);
+    </script>
+</body>
+</html>
