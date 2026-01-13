@@ -88,6 +88,15 @@
         }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        
+        /* Pulse animation for the player when it opens */
+        .pulse-once {
+            animation: pulse-border 1.5s ease-out;
+        }
+        @keyframes pulse-border {
+            0% { border-color: rgba(79, 70, 229, 0.8); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+            100% { border-color: rgba(255, 255, 255, 0.08); box-shadow: 0 0 0 10px rgba(79, 70, 229, 0); }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 flex items-center justify-center min-h-screen">
@@ -385,6 +394,7 @@
             const btn = document.getElementById('generateBtn');
             const vis = document.getElementById('audioVisualizer');
             const speed = parseFloat(speedInput.value);
+            const playerWidget = document.getElementById('playerWidget');
 
             btn.disabled = true;
             document.getElementById('btnContent').classList.add('hidden');
@@ -406,7 +416,11 @@
                 audio.src = url;
                 audio.playbackRate = speed;
                 
-                document.getElementById('playerWidget').classList.remove('hidden');
+                // OPEN: Show the player widget
+                playerWidget.classList.remove('hidden');
+                playerWidget.classList.add('pulse-once');
+                setTimeout(() => playerWidget.classList.remove('pulse-once'), 1500);
+
                 document.getElementById('nowPlaying').innerText = `${selectedVoice.toUpperCase()} | ${selectedTone.toUpperCase()} | ${speed}x`;
                 
                 document.getElementById('downloadBtn').onclick = () => {
@@ -415,7 +429,12 @@
                     a.download = `DAHAN_${selectedVoice}_${Date.now()}.wav`;
                     a.click();
                 };
-                audio.play();
+
+                // CLICK/PLAY: Trigger audio playback immediately
+                audio.play().catch(e => {
+                    console.log("Autoplay prevented by browser, user interaction required.");
+                });
+
             } catch (err) {
                 showModal("Engine Error", "Failed to generate voice. Please check API status.");
             } finally {
