@@ -89,7 +89,6 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
         
-        /* Pulse animation for the player when it opens */
         .pulse-once {
             animation: pulse-border 1.5s ease-out;
         }
@@ -106,7 +105,6 @@
         <!-- Sidebar -->
         <div class="lg:col-span-4 flex flex-col h-full">
             <div class="glass p-6 md:p-8 flex flex-col max-h-[90vh]">
-                <!-- DAHAN Custom Branded Logo -->
                 <div class="flex items-center gap-4 mb-8">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                         <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,7 +141,6 @@
             <div class="glass p-8 md:p-10 flex-grow flex flex-col min-h-[500px]">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <!-- Performance Styles -->
                     <div>
                         <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 block">Performance Tone</label>
                         <div class="flex flex-wrap gap-2" id="toneList">
@@ -151,7 +148,6 @@
                         </div>
                     </div>
 
-                    <!-- Speed Control -->
                     <div>
                         <div class="flex justify-between items-center mb-3">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">Playback Speed</label>
@@ -188,7 +184,6 @@
                 </div>
             </div>
 
-            <!-- Player UI -->
             <div id="playerWidget" class="glass p-5 hidden animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div class="flex items-center gap-5">
                     <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
@@ -208,7 +203,6 @@
         </div>
     </div>
 
-    <!-- Feedback Modal -->
     <div id="feedbackModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6">
         <div class="bg-slate-900 border border-white/10 p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl">
             <div id="modalIcon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"></div>
@@ -219,7 +213,12 @@
     </div>
 
     <script>
-        const apiKey = ""; // Set dynamically by environment
+        // Use environment API key or default to empty for manual entry
+        const getApiKey = () => {
+            if (typeof apiKey !== 'undefined' && apiKey) return apiKey;
+            return ""; 
+        };
+
         let selectedVoice = "Charon";
         let selectedTone = "Neutral";
         let currentFilter = "All";
@@ -341,7 +340,8 @@
         }
 
         async function apiCall(text, voiceName) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const key = getApiKey();
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${key}`;
             const delays = [1000, 2000, 4000, 8000, 16000];
             
             for (let i = 0; i <= delays.length; i++) {
@@ -359,10 +359,16 @@
                     });
                     
                     if (response.ok) return await response.json();
-                    if (i === delays.length) throw new Error("Connection Timeout");
+                    
+                    const errorBody = await response.json().catch(() => ({}));
+                    if (response.status === 401 || response.status === 403) {
+                        throw new Error(`Authentication failed (Status ${response.status}). Key may be invalid.`);
+                    }
+                    
+                    if (i === delays.length) throw new Error(errorBody.error?.message || "Server Error");
                     await new Promise(r => setTimeout(r, delays[i]));
                 } catch (e) {
-                    if (i === delays.length) throw e;
+                    if (i === delays.length || e.message.includes('Authentication')) throw e;
                 }
             }
         }
@@ -372,7 +378,7 @@
             const originalIcon = btn.innerHTML;
             btn.innerHTML = `<span class="loader w-3 h-3"></span>`;
             try {
-                const res = await apiCall(`Sample voice: ${voiceName}`, voiceName);
+                const res = await apiCall(`Hello, I am ${voiceName}.`, voiceName);
                 const data = res.candidates[0].content.parts[0].inlineData;
                 const sampleRate = parseInt(data.mimeType.split('rate=')[1]) || 24000;
                 const bin = atob(data.data);
@@ -383,13 +389,16 @@
                 audio.play();
             } catch (e) { 
                 btn.innerHTML = originalIcon;
-                showModal("API Alert", "Unable to load voice preview.");
+                showModal("API Alert", e.message || "Unable to load voice preview.");
             }
         }
 
         async function generate() {
             const text = document.getElementById('textInput').value.trim();
-            if (!text) return;
+            if (!text) {
+                showModal("Input Required", "Please enter some text to synthesize.");
+                return;
+            }
 
             const btn = document.getElementById('generateBtn');
             const vis = document.getElementById('audioVisualizer');
@@ -405,6 +414,10 @@
             
             try {
                 const res = await apiCall(`${tone}${text}`, selectedVoice);
+                if (!res.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
+                    throw new Error("Invalid response from engine.");
+                }
+
                 const data = res.candidates[0].content.parts[0].inlineData;
                 const sampleRate = parseInt(data.mimeType.split('rate=')[1]) || 24000;
                 const bin = atob(data.data);
@@ -416,7 +429,6 @@
                 audio.src = url;
                 audio.playbackRate = speed;
                 
-                // OPEN: Show the player widget
                 playerWidget.classList.remove('hidden');
                 playerWidget.classList.add('pulse-once');
                 setTimeout(() => playerWidget.classList.remove('pulse-once'), 1500);
@@ -430,13 +442,12 @@
                     a.click();
                 };
 
-                // CLICK/PLAY: Trigger audio playback immediately
                 audio.play().catch(e => {
-                    console.log("Autoplay prevented by browser, user interaction required.");
+                    console.warn("Autoplay was blocked by the browser. Please press Play manually.");
                 });
 
             } catch (err) {
-                showModal("Engine Error", "Failed to generate voice. Please check API status.");
+                showModal("Engine Error", err.message || "Failed to generate voice.");
             } finally {
                 btn.disabled = false;
                 document.getElementById('btnContent').classList.remove('hidden');
