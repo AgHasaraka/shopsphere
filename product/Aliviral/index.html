@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AliExpress Pro Analyzer | AI Social Post Generator</title>
+    <meta name="description"
+        content="Extract AliExpress product data and generate viral social media posts instantly with AI.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav class="glass-nav">
+        <div class="nav-content">
+            <div class="logo">
+                <span class="gradient-text">AliExpress</span> Pro
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active">Analyzer</a>
+                <a href="#">History</a>
+                <a href="#">Settings</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero-section">
+            <h1 class="hero-title">Transform Links into <span class="gradient-text">Viral Sales</span></h1>
+            <p class="hero-subtitle">Paste your AliExpress affiliate link and let our AI handle the rest—from extraction
+                to content generation.</p>
+
+            <div class="input-card glass">
+                <div class="input-wrapper">
+                    <input type="text" id="aliLink" placeholder="Paste AliExpress link here..." autocomplete="off">
+                    <button id="analyzeBtn" class="btn-primary">
+                        <span class="btn-text">Auto Analyze</span>
+                        <div class="loader-circle" id="btnLoader" style="display: none;"></div>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span>⚡ AI-Powered Extraction</span>
+                    <span class="dot"></span>
+                    <span>🔗 Affiliate Ready</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="resultsSection" class="results-grid" style="display: none;">
+            <!-- Product Info Card -->
+            <div class="card glass product-card full-width">
+                <div class="card-header">
+                    <h3>Product Details</h3>
+                    <div class="card-actions">
+                        <button id="downloadAllBtn" class="btn-secondary btn-small"
+                            title="Download all photos and videos">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Save All
+                        </button>
+                        <span class="badge" id="sourceBadge">Extracted</span>
+                    </div>
+                </div>
+                <div class="product-layout">
+                    <div class="media-section">
+                        <div class="main-preview glass">
+                            <div class="image-container skeleton" id="mainImageContainer">
+                                <img id="productImage" src="" alt="Product Image">
+                            </div>
+                        </div>
+                        <div class="media-thumbnails" id="mediaThumbnails">
+                            <!-- Thumbnails added here -->
+                        </div>
+                    </div>
+                    <div class="product-info-section">
+                        <h2 id="productTitle" class="skeleton-text">Product Name</h2>
+                        <div class="price-row">
+                            <span id="currentPrice" class="price primary skeleton-text">$--.--</span>
+                            <span id="originalPrice" class="price-old skeleton-text">$--.--</span>
+                            <span id="discount" class="discount-pill skeleton-text">--% OFF</span>
+                        </div>
+                        <div class="stats-row">
+                            <span id="rating" class="stat">⭐ 0.0</span>
+                            <span id="reviews" class="stat">0 Reviews</span>
+                        </div>
+                        <div class="description-box">
+                            <h4>Description Highlights</h4>
+                            <p id="productDesc" class="skeleton-text">Detailed product description will appear here
+                                after analysis...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Viral Post Card -->
+            <div class="card glass post-card">
+                <div class="card-header">
+                    <h3>Viral Social Post</h3>
+                    <button class="btn-icon" id="copyPostBtn" title="Copy to clipboard">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="post-content-wrapper">
+                    <div id="viralPost" class="post-body skeleton-text">
+                        Generating your viral content...
+                    </div>
+                    <div class="hashtag-container" id="hashtags">
+                        <!-- Hashtags added here -->
+                    </div>
+                </div>
+                <div class="post-footer">
+                    <button class="btn-secondary" id="regenerateBtn">Regenerate Post</button>
+                    <button class="btn-primary" id="copyAllBtn">Copy All Content</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Preview Modal -->
+        <div id="previewModal" class="modal">
+            <div class="modal-content glass">
+                <span class="close-modal">&times;</span>
+                <div class="modal-body">
+                    <div id="modalMediaContainer"></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="downloadMediaBtn" class="btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download Asset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Form Fallback -->
+        <section id="manualSection" class="manual-entry-section glass" style="display: none;">
+            <div class="section-header">
+                <h2>Manual Entry Form</h2>
+                <p>Automatic extraction hit a wall (Anti-scraping). Please fill in the details manually.</p>
+            </div>
+            <form id="manualForm" class="manual-grid">
+                <div class="form-group full-width">
+                    <label>Product Title</label>
+                    <input type="text" id="m-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Current Price</label>
+                    <input type="text" id="m-price" placeholder="e.g. $12.99">
+                </div>
+                <div class="form-group">
+                    <label>Original Price</label>
+                    <input type="text" id="m-oldPrice">
+                </div>
+                <div class="form-group">
+                    <label>Discount (%)</label>
+                    <input type="number" id="m-discount">
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="url" id="m-image">
+                </div>
+                <div class="form-group full-width">
+                    <label>OR: Paste Product Page Source (HTML)</label>
+                    <textarea id="m-source" rows="4"
+                        placeholder="If auto-scrape fails, right-click AliExpress page > View Source > Copy All and Paste here for AI analysis."></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label>Key Features / Highlights</label>
+                    <textarea id="m-desc" rows="4"
+                        placeholder="If not pasting source, type key features here..."></textarea>
+                </div>
+                <div class="form-actions full-width">
+                    <button type="button" class="btn-secondary" id="cancelManual">Cancel</button>
+                    <button type="submit" class="btn-primary">Generate Post Now</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Debug Log Terminal -->
+    <footer class="debug-terminal glass">
+        <div class="terminal-header">
+            <span>System Logs</span>
+            <button id="clearLogs">Clear</button>
+        </div>
+        <div id="logs" class="terminal-body">
+            <div class="log-entry system">Ready for analysis...</div>
+        </div>
+    </footer>
+
+    <script src="main.js" type="module"></script>
+</body>
+
+</html>
