@@ -320,11 +320,12 @@ h3,
 .product-layout {
   display: flex;
   gap: 2.5rem;
+  min-width: 0;
 }
 
 .media-section {
-  flex: 1;
-  max-width: 50%;
+  flex: 0 0 360px;
+  max-width: 360px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -332,6 +333,8 @@ h3,
 
 .main-preview {
   width: 100%;
+  max-width: 360px;
+  max-height: 360px;
   aspect-ratio: 1;
   border-radius: 20px;
   overflow: hidden;
@@ -357,6 +360,8 @@ h3,
   padding-bottom: 0.5rem;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) transparent;
+  width: 100%;
+  max-width: 360px;
 }
 
 .media-thumbnails::-webkit-scrollbar {
@@ -412,6 +417,7 @@ h3,
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 .price-row {
@@ -477,7 +483,7 @@ h3,
 .modal-content {
   position: relative;
   width: 90%;
-  max-width: 800px;
+  max-width: 900px;
   padding: 2rem;
   border-radius: 24px;
   animation: modalScale 0.3s ease-out;
@@ -514,13 +520,17 @@ h3,
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
+  min-height: 280px;
+  max-height: 70vh;
 }
 
 #modalMediaContainer img,
 #modalMediaContainer video {
-  max-width: 100%;
+  max-width: min(90vw, 860px);
   max-height: 70vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
@@ -541,6 +551,7 @@ h3,
   }
 
   .media-section {
+    flex: 1 1 auto;
     max-width: 100%;
   }
 }
@@ -552,22 +563,98 @@ h3,
   padding: 1.25rem;
   border: 1px solid var(--glass-border);
   flex: 1;
+  min-width: 0;
+}
+
+.post-body,
+#productTitle,
+#productDesc {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .post-body {
   white-space: pre-wrap;
-  margin-bottom: 1.5rem;
 }
 
-.hashtag-container {
+.post-footer {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.glass-select {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  transition: var(--transition);
+}
+
+.glass-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}
+
+.glass-select option {
+  background: var(--bg-dark);
+}
+
+.btn-icon-text {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.hashtag {
-  color: var(--secondary);
-  font-size: 0.9rem;
+.loader-circle.mini {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.skeleton-text {
+  position: relative;
+  overflow: hidden;
+  color: transparent !important;
+  user-select: none;
+  border-radius: 4px;
+}
+
+.skeleton-text::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Terminal */
