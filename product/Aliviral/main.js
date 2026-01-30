@@ -5,6 +5,322 @@
 // --- Global State ---
 let currentProductData = null;
 
+const PLACEHOLDER_IMAGE = 'https://placehold.co/400x400/1e293b/white?text=No+Image';
+const IMAGE_PROXY_BASE = 'https://images.weserv.nl/?url=';
+const WORLD_POPULATION_LABEL = 'about 8.27 billion';
+const WORLD_POPULATION_DATE = 'January 26, 2026';
+
+function stripResizeSuffix(url) {
+    const [base, ...queryParts] = url.split('?');
+    const cleanedBase = base.replace(/(\.(?:jpe?g|png|webp))_.+$/i, '$1');
+    const query = queryParts.length ? `?${queryParts.join('?')}` : '';
+    return `${cleanedBase}${query}`;
+}
+
+function normalizeImageUrl(url) {
+    if (!url) return null;
+    let cleaned = url.trim().replace(/^['"]|['"]$/g, '');
+    cleaned = cleaned.replace(/\\u002F/g, '/').replace(/\\\//g, '/').replace(/&amp;/g, '&');
+    if (cleaned.startsWith('//')) cleaned = `https:${cleaned}`;
+    if (!/^https?:\/\//i.test(cleaned)) return null;
+    return stripResizeSuffix(cleaned);
+}
+
+function isIgnoredImage(url) {
+    return /no-image|default|placeholder|empty|logo|icon|sprite|favicon|error|avatar/i.test(url);
+}
+
+function addUniqueImage(list, url) {
+    const normalized = normalizeImageUrl(url);
+    if (!normalized || isIgnoredImage(normalized)) return;
+    if (!list.includes(normalized)) list.push(normalized);
+}
+
+function isProxyUrl(url) {
+    return typeof url === 'string' && url.startsWith(IMAGE_PROXY_BASE);
+}
+
+function getProxyUrl(url) {
+    if (!url || isProxyUrl(url)) return url;
+    const stripped = url.replace(/^https?:\/\//i, '');
+    return `${IMAGE_PROXY_BASE}${encodeURIComponent(stripped)}`;
+}
+
+function setImageWithFallback(img, url, { onLoad, onFinalError } = {}) {
+    const originalUrl = url || PLACEHOLDER_IMAGE;
+    img.dataset.original = originalUrl;
+    img.dataset.proxyTried = 'false';
+
+    img.onload = () => {
+        if (onLoad) onLoad();
+    };
+
+    img.onerror = () => {
+        if (img.dataset.proxyTried === 'true' || isProxyUrl(originalUrl) || originalUrl === PLACEHOLDER_IMAGE) {
+            if (onFinalError) onFinalError();
+            return;
+        }
+        img.dataset.proxyTried = 'true';
+        img.src = getProxyUrl(originalUrl);
+    };
+
+    img.src = originalUrl;
+}
+
+function safeJsonParse(text) {
+    try {
+        return JSON.parse(text);
+    } catch (error) {
+        return null;
+    }
+}
+
+function getMetaContent(html, key) {
+    const escaped = key.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const patterns = [
+        new RegExp(`<meta[^>]*property=["']${escaped}["'][^>]*content=["']([^"']+)["'][^>]*>`, 'i'),
+        new RegExp(`<meta[^>]*name=["']${escaped}["'][^>]*content=["']([^"']+)["'][^>]*>`, 'i'),
+        new RegExp(`<meta[^>]*content=["']([^"']+)["'][^>]*property=["']${escaped}["'][^>]*>`, 'i'),
+        new RegExp(`<meta[^>]*content=["']([^"']+)["'][^>]*name=["']${escaped}["'][^>]*>`, 'i')
+    ];
+
+    for (const pattern of patterns) {
+        const match = html.match(pattern);
+        if (match && match[1]) {
+            return match[1];
+        }
+    }
+
+    return null;
+}
+
+function extractTextFromHtml(html, pattern) {
+    const match = html.match(pattern);
+    if (!match || !match[1]) return null;
+    return decodeHtmlEntities(
+        match[1]
+            .replace(/<[^>]*>/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+    );
+}
+
+function extractObjectLiteral(source, startIndex) {
+    const start = source.indexOf('{', startIndex);
+    if (start === -1) return null;
+    let depth = 0;
+    let inString = false;
+    let stringChar = '';
+
+    for (let i = start; i < source.length; i++) {
+        const char = source[i];
+
+        if (inString) {
+            if (char === '\\') {
+                i += 1;
+                continue;
+            }
+            if (char === stringChar) {
+                inString = false;
+            }
+            continue;
+        }
+
+        if (char === '"' || char === "'") {
+            inString = true;
+            stringChar = char;
+            continue;
+        }
+
+        if (char === '{') depth += 1;
+        if (char === '}') {
+            depth -= 1;
+            if (depth === 0) {
+                return source.slice(start, i + 1);
+            }
+        }
+    }
+
+    return null;
+}
+
+function parseLooseObject(text) {
+    if (!text) return null;
+    const parsed = safeJsonParse(text);
+    if (parsed) return parsed;
+
+    try {
+        return Function(`"use strict"; return (${text});`)();
+    } catch (error) {
+        return null;
+    }
+}
+
+function parsePriceFromUrl(rawUrl) {
+    try {
+        const url = new URL(rawUrl);
+        let pdpNpi = url.searchParams.get('pdp_npi');
+        if (!pdpNpi) return null;
+        try {
+            pdpNpi = decodeURIComponent(pdpNpi);
+        } catch (error) {
+            // Keep original if decoding fails.
+        }
+        const parts = pdpNpi.split('!');
+        const currencyIndex = parts.findIndex(part => /^[A-Z]{3}$/.test(part));
+        if (currencyIndex === -1) return null;
+        const numbers = [];
+        for (let i = currencyIndex + 1; i < parts.length; i += 1) {
+            const value = parseFloat(parts[i]);
+            if (Number.isFinite(value)) {
+                numbers.push(value);
+                if (numbers.length >= 2) break;
+            }
+        }
+        if (!numbers.length) return null;
+
+        let original = numbers[0];
+        let current = numbers.length > 1 ? numbers[1] : numbers[0];
+        if (current > original) {
+            [current, original] = [original, current];
+        }
+
+        return {
+            currency: parts[currencyIndex],
+            current,
+            original
+        };
+    } catch (error) {
+        return null;
+    }
+}
+
+function extractRunParams(html) {
+    const candidates = [
+        'window.runParams',
+        'runParams',
+        'window.__AER_DATA__',
+        '__AER_DATA__',
+        'window._d_c_.DCData',
+        '_d_c_.DCData',
+        'window._d_c_',
+        '_d_c_'
+    ];
+
+    for (const candidate of candidates) {
+        const index = html.indexOf(candidate);
+        if (index === -1) continue;
+        const objectLiteral = extractObjectLiteral(html, index);
+        if (!objectLiteral) continue;
+        const parsed = parseLooseObject(objectLiteral);
+        if (parsed) return parsed;
+    }
+
+    return null;
+}
+
+function getValueByPath(obj, path) {
+    return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), obj);
+}
+
+function getFirstValueByPaths(obj, paths) {
+    for (const path of paths) {
+        const value = getValueByPath(obj, path);
+        if (value !== null && value !== undefined && value !== '') {
+            return value;
+        }
+    }
+    return null;
+}
+
+function findProductInJsonLd(data) {
+    if (!data) return null;
+    if (Array.isArray(data)) {
+        for (const item of data) {
+            const found = findProductInJsonLd(item);
+            if (found) return found;
+        }
+        return null;
+    }
+
+    if (data['@graph']) {
+        return findProductInJsonLd(data['@graph']);
+    }
+
+    const type = data['@type'];
+    if (type === 'Product' || (Array.isArray(type) && type.includes('Product'))) {
+        return data;
+    }
+
+    for (const value of Object.values(data)) {
+        if (value && typeof value === 'object') {
+            const found = findProductInJsonLd(value);
+            if (found) return found;
+        }
+    }
+    return null;
+}
+
+function extractJsonLdData(html) {
+    const scriptRegex = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+    let match;
+    while ((match = scriptRegex.exec(html)) !== null) {
+        const jsonText = match[1].trim();
+        if (!jsonText) continue;
+        const data = safeJsonParse(jsonText);
+        const product = findProductInJsonLd(data);
+        if (!product) continue;
+
+        const offers = Array.isArray(product.offers) ? product.offers[0] : product.offers;
+        const images = Array.isArray(product.image) ? product.image : (product.image ? [product.image] : []);
+
+        return {
+            name: product.name || null,
+            description: product.description || null,
+            images,
+            price: offers ? (offers.price || offers.lowPrice || offers.highPrice || (offers.priceSpecification ? offers.priceSpecification.price : null)) : null,
+            currency: offers ? (offers.priceCurrency || null) : null
+        };
+    }
+
+    return {
+        name: null,
+        description: null,
+        images: [],
+        price: null,
+        currency: null
+    };
+}
+
+function parsePriceNumber(value) {
+    if (value === null || value === undefined) return null;
+    if (typeof value === 'number') return Number.isNaN(value) ? null : value;
+    if (typeof value !== 'string') return null;
+    const cleaned = value.replace(/[^0-9.,]/g, '');
+    if (!cleaned) return null;
+    const normalized = cleaned.replace(/,/g, '');
+    const parsed = parseFloat(normalized);
+    return Number.isNaN(parsed) ? null : parsed;
+}
+
+function formatPrice(value, currencySymbol, currencyCode) {
+    if (value === null || value === undefined) return value;
+    if (typeof value === 'number') value = value.toString();
+    if (typeof value !== 'string') return value;
+    const hasCurrency = /[$€£¥]|[A-Z]{2,3}\b/.test(value);
+    if (hasCurrency) return value;
+    if (currencySymbol) return `${currencySymbol}${value}`;
+    if (currencyCode) return `${currencyCode} ${value}`;
+    return value;
+}
+
+function decodeHtmlEntities(value) {
+    if (!value || typeof value !== 'string') return value;
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = value;
+    return textarea.value;
+}
+
 // --- Selectors ---
 const elements = {
     aliLink: document.getElementById('aliLink'),
@@ -63,6 +379,11 @@ function setupEventListeners() {
     elements.regenerateBtn.addEventListener('click', () => {
         if (currentProductData) generateViralContent(currentProductData);
     });
+    if (elements.postDuration) {
+        elements.postDuration.addEventListener('change', () => {
+            if (currentProductData) generateViralContent(currentProductData);
+        });
+    }
 
     elements.manualForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -90,12 +411,13 @@ function setupEventListeners() {
     elements.downloadMediaBtn.addEventListener('click', () => {
         const activeMedia = elements.modalMediaContainer.querySelector('img, video');
         if (activeMedia) {
-            downloadMedia(activeMedia.src, activeMedia.tagName.toLowerCase());
+            const mediaUrl = activeMedia.dataset.original || activeMedia.src;
+            downloadMedia(mediaUrl, activeMedia.tagName.toLowerCase());
         }
     });
 
     elements.mainImageContainer.addEventListener('click', () => {
-        const src = elements.productImage.src;
+        const src = elements.productImage.dataset.original || elements.productImage.src;
         if (src) showPreview(src, 'img');
     });
 
@@ -124,7 +446,7 @@ async function handleAnalyze() {
         const html = await fetchPageContent(url);
 
         log('Extracting product data...', 'info');
-        const data = await extractDataFromHTML(html);
+        const data = await extractDataFromHTML(html, url);
 
         if (!data || !data.name) {
             throw new Error('Incomplete data extracted.');
@@ -265,7 +587,7 @@ async function fetchPageContent(url, isRetry = false) {
     }
 }
 
-async function extractDataFromHTML(html) {
+async function extractDataFromHTML(html, sourceUrl = '') {
     log('Analyzing HTML content...', 'info');
 
     const getMatch = (regex, string, index = 1) => {
@@ -273,17 +595,38 @@ async function extractDataFromHTML(html) {
         return match ? match[index] : null;
     };
 
+    const runParams = extractRunParams(html);
+    const runData = runParams && runParams.data ? runParams.data : runParams;
+    const jsonLd = extractJsonLdData(html);
+
+    const titleFromRunParams = runData ? getFirstValueByPaths(runData, [
+        'titleModule.subject',
+        'titleModule.title',
+        'titleModule.productTitle',
+        'productTitle',
+        'productName',
+        'title',
+        'subject'
+    ]) : null;
+
     // 1. Title
-    const title = getMatch(/<meta property="og:title" content="([^"]+)"/, html) ||
+    const metaTitle = getMetaContent(html, 'og:title') || getMetaContent(html, 'twitter:title');
+    const domTitle = extractTextFromHtml(html, /<h1[^>]*data-pl=["']product-title["'][^>]*>([\s\S]*?)<\/h1>/i) ||
+        extractTextFromHtml(html, /<h1[^>]*class=["'][^"']*title--[^"']*["'][^>]*>([\s\S]*?)<\/h1>/i) ||
+        extractTextFromHtml(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i);
+    const rawTitle = domTitle ||
+        jsonLd.name ||
+        titleFromRunParams ||
+        metaTitle ||
         getMatch(/<title>([^<]+)<\/title>/, html) ||
-        getMatch(/<h1>([^<]+)<\/h1>/, html) ||
         "AliExpress Product";
 
     // 2. Main Image - Try multiple sources
     let mainImage = null;
 
     // Try og:image first
-    const ogMatch = html.match(/<meta property="og:image" content="([^"]+)"/);
+    const ogImage = getMetaContent(html, 'og:image');
+    const ogMatch = ogImage ? [null, ogImage] : null;
     if (ogMatch) {
         mainImage = ogMatch[1];
         log(`Found og:image: ${mainImage.substring(0, 50)}...`, 'info');
@@ -291,7 +634,8 @@ async function extractDataFromHTML(html) {
 
     // Try twitter:image
     if (!mainImage) {
-        const twitterMatch = html.match(/<meta name="twitter:image" content="([^"]+)"/);
+        const twitterImage = getMetaContent(html, 'twitter:image');
+        const twitterMatch = twitterImage ? [null, twitterImage] : null;
         if (twitterMatch) {
             mainImage = twitterMatch[1];
             log(`Found twitter:image: ${mainImage.substring(0, 50)}...`, 'info');
@@ -300,53 +644,67 @@ async function extractDataFromHTML(html) {
 
     // Clean the main image URL
     if (mainImage) {
-        if (mainImage.startsWith('//')) mainImage = 'https:' + mainImage;
+        if (mainImage.startsWith('//')) mainImage = `https:${mainImage}`;
         mainImage = mainImage.replace(/\\\//g, '/');
+        mainImage = normalizeImageUrl(mainImage) || mainImage;
     }
 
     // 3. Find ALL image URLs in the HTML
     const allImages = [];
 
-    // Very broad pattern - any alicdn URL
-    const imgPattern = /['"](https?:\/\/[^'"]*alicdn\.com[^'"]*\.(?:jpg|jpeg|png|webp))['"]/gi;
-    let match;
-    while ((match = imgPattern.exec(html)) !== null) {
-        let url = match[1].replace(/\\\//g, '/');
-        // Remove resize suffixes
-        url = url.split('.jpg_')[0] + '.jpg';
-        if (url.includes('.png')) url = url.split('.png_')[0] + '.png';
-        if (!allImages.includes(url) && url.length < 300) {
-            allImages.push(url);
+    if (jsonLd.images && jsonLd.images.length) {
+        jsonLd.images.forEach(url => addUniqueImage(allImages, url));
+    }
+
+    if (runData) {
+        const runImages = getFirstValueByPaths(runData, [
+            'imageModule.imagePathList',
+            'imageModule.images',
+            'imageModule.imagePath',
+            'imagePathList',
+            'summImagePathList'
+        ]);
+        if (Array.isArray(runImages)) {
+            runImages.forEach(url => addUniqueImage(allImages, url));
+        } else if (typeof runImages === 'string') {
+            addUniqueImage(allImages, runImages);
         }
     }
 
+    // Known image lists in AliExpress JSON blobs
+    const imagePathListRegex = /"imagePathList"\s*:\s*\[([^\]]+)\]/gi;
+    let listMatch;
+    while ((listMatch = imagePathListRegex.exec(html)) !== null) {
+        const listChunk = listMatch[1];
+        const urlMatches = listChunk.match(/"(https?:\/\/[^"]+|\/\/[^"]+)"/g) || [];
+        urlMatches.forEach(raw => addUniqueImage(allImages, raw));
+    }
+
+    // Common image fields in product JSON
+    const imageFieldRegex = /"(?:imageUrl|imagePath|skuImage)"\s*:\s*"([^"]+)"/gi;
+    let fieldMatch;
+    while ((fieldMatch = imageFieldRegex.exec(html)) !== null) {
+        addUniqueImage(allImages, fieldMatch[1]);
+    }
+
+    // Very broad pattern - any alicdn URL
+    const imgPattern = /['"](https?:[^'"]*alicdn\.com[^'"]*\.(?:jpg|jpeg|png|webp)[^'"]*)['"]/gi;
+    let match;
+    while ((match = imgPattern.exec(html)) !== null) {
+        addUniqueImage(allImages, match[1]);
+    }
+
     // Also try protocol-relative
-    const protoPattern = /['"]\/\/(ae[0-9]+\.alicdn\.com[^'"]+\.(?:jpg|jpeg|png|webp))['"]/gi;
+    const protoPattern = /['"]\/\/(ae[0-9]+\.alicdn\.com[^'"]+\.(?:jpg|jpeg|png|webp)[^'"]*)['"]/gi;
     while ((match = protoPattern.exec(html)) !== null) {
-        let url = 'https://' + match[1].replace(/\\\//g, '/');
-        url = url.split('.jpg_')[0] + '.jpg';
-        if (!allImages.includes(url) && url.length < 300) {
-            allImages.push(url);
-        }
+        addUniqueImage(allImages, `https://${match[1]}`);
     }
 
     log(`Total images found in HTML: ${allImages.length}`, 'info');
 
-    // Filter to only product images (containing /kf/)
-    const productImages = allImages.filter(url => url.includes('/kf/'));
-
-    log(`Product images (with /kf/): ${productImages.length}`, 'info');
-
-    // Use product images if found, otherwise all images
-    let finalImages = productImages.length > 0 ? productImages : allImages;
-
-    // Add main image at the start if we have it
-    if (mainImage && !finalImages.includes(mainImage)) {
-        finalImages.unshift(mainImage);
-    }
-
-    // Remove duplicates
-    finalImages = [...new Set(finalImages)].slice(0, 30);
+    const finalImages = [];
+    addUniqueImage(finalImages, mainImage);
+    allImages.forEach(url => addUniqueImage(finalImages, url));
 
     // Log first image for debugging
     if (finalImages.length > 0) {
@@ -354,7 +712,7 @@ async function extractDataFromHTML(html) {
     } else {
         log('WARNING: No images found!', 'error');
         // Use a guaranteed working placeholder
-        finalImages = ['https://placehold.co/400x400/1e293b/white?text=No+Image'];
+        finalImages.push(PLACEHOLDER_IMAGE);
     }
 
     // 4. Videos
@@ -365,22 +723,105 @@ async function extractDataFromHTML(html) {
     });
 
     // 5. Description
-    const description = getMatch(/<meta name="description" content="([^"]+)"/, html) ||
-        getMatch(/<meta property="og:description" content="([^"]+)"/, html) ||
+    const description = jsonLd.description ||
+        getMetaContent(html, 'description') ||
+        getMetaContent(html, 'og:description') ||
         "Product details available on AliExpress.";
 
     // 6. Price
-    const currentPrice = getMatch(/"formatedAmount"\s*:\s*"([^"]+)"/, html) ||
+    const domCurrentPrice = extractTextFromHtml(html, /<span[^>]*price-default--current[^>]*>([\s\S]*?)<\/span>/i) ||
+        extractTextFromHtml(html, /<span[^>]*price--current[^>]*>([\s\S]*?)<\/span>/i);
+    const domOriginalPrice = extractTextFromHtml(html, /<span[^>]*price-default--original[^>]*>([\s\S]*?)<\/span>/i);
+
+    const currencySymbol = runData ? getFirstValueByPaths(runData, [
+        'priceModule.currencySymbol',
+        'priceModule.currency',
+        'priceModule.currencyCode'
+    ]) : null;
+
+    const currencyCode = runData ? getFirstValueByPaths(runData, [
+        'priceModule.currencyCode',
+        'priceModule.currency'
+    ]) : (jsonLd.currency || getMetaContent(html, 'product:price:currency') || getMetaContent(html, 'og:price:currency'));
+
+    let currentPrice = (runData ? getFirstValueByPaths(runData, [
+        'priceModule.formatedPrice',
+        'priceModule.formatedAmount',
+        'priceModule.minActivityAmount',
+        'priceModule.minAmount',
+        'priceModule.minPrice',
+        'priceModule.skuPrice',
+        'priceModule.price',
+        'skuModule.skuPrice',
+        'skuModule.price'
+    ]) : null) ||
+        domCurrentPrice ||
+        jsonLd.price ||
+        getMetaContent(html, 'product:price:amount') ||
+        getMetaContent(html, 'og:price:amount') ||
+        getMatch(/"formatedPrice"\s*:\s*"([^"]+)"/, html) ||
+        getMatch(/"formatedAmount"\s*:\s*"([^"]+)"/, html) ||
         getMatch(/"actPriceText"\s*:\s*"([^"]+)"/, html) ||
+        getMatch(/"salePrice"\s*:\s*"([^"]+)"/, html) ||
+        getMatch(/"skuPrice"\s*:\s*"([^"]+)"/, html) ||
         getMatch(/"minPrice"\s*:\s*"([^"]+)"/, html) ||
         getMatch(/itemprop="price" content="([^"]+)"/, html) ||
-        "$--.--";
+        "";
 
-    const originalPrice = getMatch(/"oldPriceText"\s*:\s*"([^"]+)"/, html) ||
+    let originalPrice = (runData ? getFirstValueByPaths(runData, [
+        'priceModule.originalPrice',
+        'priceModule.oldPrice',
+        'priceModule.origPrice',
+        'priceModule.linePrice',
+        'priceModule.maxPrice'
+    ]) : null) ||
+        domOriginalPrice ||
+        getMetaContent(html, 'product:original_price:amount') ||
+        getMatch(/"oldPriceText"\s*:\s*"([^"]+)"/, html) ||
         getMatch(/"origPriceText"\s*:\s*"([^"]+)"/, html) || "";
 
-    const discount = getMatch(/"discount"\s*:\s*"?(\d+)"?/, html) ||
-        getMatch(/"discountRate"\s*:\s*"?(\d+)"?/, html) || "0";
+    let discount = getMatch(/"discount"\s*:\s*"?(\d+)"?/, html) ||
+        getMatch(/"discountRate"\s*:\s*"?(\d+)"?/, html) || "";
+
+    if (currentPrice) {
+        currentPrice = formatPrice(currentPrice, currencySymbol, currencyCode);
+    }
+
+    if (originalPrice) {
+        originalPrice = formatPrice(originalPrice, currencySymbol, currencyCode);
+    }
+
+    if (!currentPrice) {
+        const urlPrice = sourceUrl ? parsePriceFromUrl(sourceUrl) : null;
+        if (urlPrice && Number.isFinite(urlPrice.current)) {
+            currentPrice = formatPrice(urlPrice.current.toFixed(2), null, urlPrice.currency);
+            if (!originalPrice && Number.isFinite(urlPrice.original)) {
+                originalPrice = formatPrice(urlPrice.original.toFixed(2), null, urlPrice.currency);
+            }
+        } else {
+            currentPrice = "$--.--";
+        }
+    }
+
+    if ((!originalPrice || originalPrice === currentPrice) && sourceUrl) {
+        const urlPrice = parsePriceFromUrl(sourceUrl);
+        if (urlPrice && Number.isFinite(urlPrice.original)) {
+            originalPrice = formatPrice(urlPrice.original.toFixed(2), null, urlPrice.currency);
+        }
+    }
+
+    if (!discount && originalPrice && currentPrice) {
+        const currentValue = parsePriceNumber(currentPrice);
+        const originalValue = parsePriceNumber(originalPrice);
+        if (currentValue && originalValue && originalValue > currentValue) {
+            const computed = Math.round(((originalValue - currentValue) / originalValue) * 100);
+            discount = `${computed}`;
+        }
+    }
+
+    if (!discount) {
+        discount = "0";
+    }
 
     // 7. Rating & Reviews
     const rating = getMatch(/"averageStar"\s*:\s*"([^"]+)"/, html) ||
@@ -388,7 +829,13 @@ async function extractDataFromHTML(html) {
     const reviews = getMatch(/"totalValidNum"\s*:\s*(\d+)/, html) ||
         getMatch(/"totalFeedbackCount"\s*:\s*(\d+)/, html) || "120+";
 
-    const cleanTitle = title.split('|')[0].replace(/AliExpress/i, '').replace(/ - /g, '').trim();
+    const cleanTitle = domTitle
+        ? domTitle.trim()
+        : decodeHtmlEntities(rawTitle)
+            .replace(/\s*\|\s*AliExpress.*$/i, '')
+            .replace(/\s*-\s*AliExpress.*$/i, '')
+            .replace(/\s*AliExpress\s*$/i, '')
+            .trim();
 
     currentProductData = {
         name: cleanTitle,
@@ -396,7 +843,7 @@ async function extractDataFromHTML(html) {
         originalPrice: originalPrice,
         discount: discount + "%",
         description: description.substring(0, 250),
-        image: finalImages[0] || "https://placehold.co/400x400/1e293b/white?text=No+Image",
+        image: finalImages[0] || PLACEHOLDER_IMAGE,
         images: finalImages,
         videos: videos,
         rating: rating,
@@ -405,6 +852,58 @@ async function extractDataFromHTML(html) {
     };
 
     return currentProductData;
+}
+
+function updateImageDebugInfo(imageUrl, totalImages) {
+    let debugInfo = document.querySelector('.image-debug-info');
+    if (!debugInfo) {
+        debugInfo = document.createElement('div');
+        debugInfo.className = 'image-debug-info';
+        debugInfo.style.cssText = 'font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);';
+        elements.mainImageContainer.appendChild(debugInfo);
+    }
+
+    const safeUrl = imageUrl || PLACEHOLDER_IMAGE;
+    debugInfo.innerHTML = `
+        <div style="margin-bottom: 0.5rem;">
+            <strong>Found ${totalImages} image(s)</strong>
+        </div>
+        <div style="margin-bottom: 0.5rem; word-break: break-all;">
+            Current: <a href="${safeUrl}" target="_blank" rel="noopener" style="color: #8b5cf6; text-decoration: underline;">${safeUrl.substring(0, 60)}...</a>
+        </div>
+        <button type="button" class="image-debug-btn" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
+            Open Image in New Tab
+        </button>
+    `;
+
+    const debugButton = debugInfo.querySelector('.image-debug-btn');
+    if (debugButton) {
+        debugButton.addEventListener('click', () => window.open(safeUrl, '_blank'));
+    }
+
+    return debugInfo;
+}
+
+function setMainImage(imageUrl, totalImages) {
+    const resolvedUrl = imageUrl || PLACEHOLDER_IMAGE;
+    const debugInfo = updateImageDebugInfo(resolvedUrl, totalImages);
+    let forceDebugVisible = false;
+
+    setImageWithFallback(elements.productImage, resolvedUrl, {
+        onLoad: () => {
+            log('Main image loaded successfully!', 'success');
+            if (!forceDebugVisible && debugInfo) debugInfo.style.display = 'none';
+        },
+        onFinalError: () => {
+            forceDebugVisible = true;
+            log('Image blocked by hotlinking protection', 'error');
+            log('Click the image or "Open Image" button to view', 'info');
+            if (debugInfo) debugInfo.style.display = 'block';
+            if (elements.productImage.src !== PLACEHOLDER_IMAGE) {
+                elements.productImage.src = PLACEHOLDER_IMAGE;
+            }
+        }
+    });
 }
 
 function displayResults(data) {
@@ -431,53 +930,13 @@ function displayResults(data) {
         elements.productDesc.innerText = data.description || "No description.";
         elements.productDesc.classList.remove('skeleton-text');
 
-        // Main image with CORS handling
-        const imageUrl = data.image || "https://placehold.co/400x400/1e293b/white?text=No+Image";
+        // Main image with fallback handling
+        const imageUrl = data.image || PLACEHOLDER_IMAGE;
 
-        // Try to load the image, but handle CORS gracefully
-        elements.productImage.src = imageUrl;
         elements.productImage.alt = "Product Image";
         elements.mainImageContainer.classList.remove('skeleton');
-
-        // Make the image container clickable to open in new tab
         elements.mainImageContainer.style.cursor = 'pointer';
-        elements.mainImageContainer.onclick = () => {
-            window.open(imageUrl, '_blank');
-        };
-
-        // Show the image URL and view button
-        let debugInfo = document.querySelector('.image-debug-info');
-        if (!debugInfo) {
-            debugInfo = document.createElement('div');
-            debugInfo.className = 'image-debug-info';
-            debugInfo.style.cssText = 'font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);';
-            elements.mainImageContainer.appendChild(debugInfo);
-        }
-        debugInfo.innerHTML = `
-            <div style="margin-bottom: 0.5rem;">
-                <strong>📷 Found ${data.images.length} image(s)</strong>
-            </div>
-            <div style="margin-bottom: 0.5rem; word-break: break-all;">
-                Current: <a href="${imageUrl}" target="_blank" style="color: #8b5cf6; text-decoration: underline;">${imageUrl.substring(0, 50)}...</a>
-            </div>
-           <button onclick="window.open('${imageUrl}', '_blank')" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
-                🔗 Open Image in New Tab
-            </button>
-        `;
-
-        // Add image load handlers
-        elements.productImage.onload = () => {
-            log('✅ Main image loaded successfully!', 'success');
-            debugInfo.style.display = 'none'; // Hide if image loads
-        };
-
-        elements.productImage.onerror = () => {
-            log('❌ Image blocked by CORS/hotlinking protection', 'error');
-            log('💡 Click the image or "Open Image" button to view', 'info');
-            // Show a message instead
-            elements.productImage.src = 'https://placehold.co/400x400/1e293b/white?text=Click+to+View+Image';
-            debugInfo.style.display = 'block'; // Show the open button
-        };
+        setMainImage(imageUrl, (data.images || []).length);
 
         // Thumbnails with better error handling
         elements.mediaThumbnails.innerHTML = '';
@@ -495,26 +954,29 @@ function displayResults(data) {
             thumb.title = media.url; // Show full URL on hover
 
             const img = document.createElement('img');
-            img.src = media.type === 'video' ? (data.image || 'https://placehold.co/100x100') : media.url;
+            const thumbUrl = media.type === 'video' ? (data.image || PLACEHOLDER_IMAGE) : media.url;
 
-            // Hide broken images
-            img.onerror = () => {
-                thumb.style.display = 'none';
-                log(`Thumbnail ${index + 1} failed to load`, 'error');
-            };
-
-            img.onload = () => {
-                log(`Thumbnail ${index + 1} loaded`, 'success');
-            };
+            setImageWithFallback(img, thumbUrl, {
+                onLoad: () => {
+                    if (img.naturalWidth < 15 || img.naturalHeight < 15) {
+                        thumb.style.display = 'none';
+                        return;
+                    }
+                    log(`Thumbnail ${index + 1} loaded`, 'success');
+                },
+                onFinalError: () => {
+                    thumb.style.display = 'none';
+                    log(`Thumbnail ${index + 1} failed to load`, 'error');
+                }
+            });
 
             thumb.appendChild(img);
             thumb.onclick = () => {
-                document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                elements.mediaThumbnails.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
                 thumb.classList.add('active');
 
                 if (media.type === 'image') {
-                    elements.productImage.src = media.url;
-                    debugInfo.innerHTML = `Image URL: <a href="${media.url}" target="_blank" style="color: #8b5cf6;">${media.url.substring(0, 60)}...</a>`;
+                    setMainImage(media.url, (data.images || []).length);
                 } else {
                     showPreview(media.url, 'video');
                 }
@@ -538,19 +1000,27 @@ function showPreview(url, type) {
         element.src = url;
         element.controls = true;
         element.autoplay = true;
+        element.dataset.original = url;
     } else {
         element = document.createElement('img');
-        element.src = url;
+        setImageWithFallback(element, url, {
+            onFinalError: () => {
+                if (element.src !== PLACEHOLDER_IMAGE) {
+                    element.src = PLACEHOLDER_IMAGE;
+                }
+            }
+        });
     }
 
     elements.modalMediaContainer.appendChild(element);
     elements.previewModal.style.display = 'flex';
 }
 
-async function downloadMedia(url, type) {
+async function downloadMedia(url, type, usedProxy = false) {
+    const targetUrl = url || (type === 'image' ? PLACEHOLDER_IMAGE : url);
     log(`Downloading ${type} asset...`, 'info');
     try {
-        const response = await fetch(url);
+        const response = await fetch(targetUrl);
         const blob = await response.blob();
         const blobUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -562,8 +1032,12 @@ async function downloadMedia(url, type) {
         window.URL.revokeObjectURL(blobUrl);
         log('Download started!', 'success');
     } catch (error) {
+        if (type === 'image' && !usedProxy && !isProxyUrl(targetUrl)) {
+            log('Direct download failed. Retrying via proxy...', 'info');
+            return downloadMedia(getProxyUrl(targetUrl), type, true);
+        }
         log('Download failed. Opening in new tab.', 'error');
-        window.open(url, '_blank');
+        window.open(targetUrl, '_blank');
     }
 }
 
@@ -586,43 +1060,157 @@ async function downloadAllMedia(data) {
     log('Batch download complete!', 'success');
 }
 
-function generateViralContent(data) {
-    log('Generating viral post...', 'info');
+// --- Elements Extension ---
+elements.postDuration = document.getElementById('postDuration');
+elements.regenLoader = document.getElementById('regenLoader');
+elements.regenText = document.querySelector('.btn-icon-text');
 
+let isGenerating = false;
+
+function generateViralContent(data) {
+    if (isGenerating) return;
+    isGenerating = true;
+
+    log('AI is analyzing trends for viral post...', 'info');
+
+    // UI Feedback
     elements.viralPost.classList.add('skeleton-text');
+    if (elements.regenLoader) elements.regenLoader.style.display = 'block';
+    if (elements.regenText) elements.regenText.style.opacity = '0.5';
+    elements.regenerateBtn.disabled = true;
 
     setTimeout(() => {
-        const discountText = parseInt(data.discount) > 10 ? `😱 ${data.discount} OFF!!` : "🔥 Best Price Today!";
+        const productTitle = data.name.toLowerCase();
         const productUrl = data.url || elements.aliLink.value.trim() || "[YOUR LINK HERE]";
+        const duration = elements.postDuration ? elements.postDuration.value : 'medium';
+        const worldPopLine = `Quick stat: There are ${WORLD_POPULATION_LABEL} people on Earth right now (${WORLD_POPULATION_DATE}).`;
+        const commentTrigger = `Comment "LINK" and I will reply with specs & best deal tips.`;
+        const safeName = data.name || 'this product';
+        const safePrice = data.currentPrice && data.currentPrice !== "$--.--" ? data.currentPrice : "a budget price";
+        const discountRate = Number.isFinite(parseInt(data.discount, 10)) ? parseInt(data.discount, 10) : 0;
+        const dealLine = discountRate > 0 ? `Deal: ${discountRate}% OFF right now.` : "Deal: Limited-time pricing.";
+        const ratingLine = data.rating ? `Rating: ${data.rating} (${data.reviews || '100+'} reviews).` : "";
+        const rawDesc = (data.description || '').trim();
+        const shortDesc = rawDesc ? rawDesc.substring(0, 120) : 'Practical, clean, and actually useful.';
+        const longDesc = rawDesc ? rawDesc.substring(0, 260) : shortDesc;
 
-        const posts = [
-            `🔥 STOP SCROLLING! This "${data.name}" is a total game changer! 😱\n\nI just found this GEM on AliExpress. Normally ${data.originalPrice || 'priced much higher'}, but today it's ONLY ${data.currentPrice} (${discountText})\n\n✨ Why you need this:\n✅ ${data.features[0]}\n✅ ${data.features[1]}\n✅ ${data.features[2]}\n\nDon't miss out! 🚀\n\nCheck it out 👉 ${productUrl}`,
-            `The secret is out! 🤫 This ${data.name} is a fraction of big brand prices but works BETTER.\n\nRated ${data.rating}/5 by happy customers. Grab yours for ${data.currentPrice} today! 💸\n\nCheck it out 👉 ${productUrl}`,
-            `POV: You found the perfect ${data.name} on AliExpress for only ${data.currentPrice}! 😍\n\nBest deal ever. Quality is 10/10.\n\nCheck it out 👉 ${productUrl}`
+        // 1. Detect Category
+        let category = 'general';
+        if (productTitle.match(/tech|led|mini|smart|phone|wireless|bluetooth|charger|keyboard/)) category = 'tech';
+        else if (productTitle.match(/dress|hoodie|jacket|jeans|bag|backpack|jewelry|sneaker|style/)) category = 'fashion';
+        else if (productTitle.match(/beauty|skincare|makeup|skin|face|hair|serum/)) category = 'beauty';
+        else if (productTitle.match(/home|decor|clean|organizer|kitchen|room|light/)) category = 'home';
+
+        // 2. Define Styles & Hooks
+        const trendingHooks = [
+            "POV: You found the holy grail of AliExpress! 💎",
+            "STOP SCROLLING! 🛑 This is about to change your life.",
+            "The secret is finally out... 🤫",
+            "This is your sign to upgrade your life! ✨",
+            "I can't believe I found this for only " + data.currentPrice + "! 😱"
         ];
 
-        const selectedPost = posts[Math.floor(Math.random() * posts.length)];
-        elements.viralPost.innerText = selectedPost;
+        const useCaseByCategory = {
+            tech: 'Best for desk setups, cleaning gear, and daily productivity.',
+            fashion: 'Best for everyday styling and easy outfit upgrades.',
+            beauty: 'Best for simple routines with visible results.',
+            home: 'Best for quick space upgrades and daily convenience.',
+            general: 'Best for smart, no-regret purchases.'
+        };
+
+        const useCaseLine = useCaseByCategory[category] || useCaseByCategory.general;
+
+        const templateBank = {
+            short: [
+                `${safeName} at ${safePrice}. ${dealLine}\nDetails: ${shortDesc}`,
+                `${safeName} for ${safePrice}. ${dealLine}\nDetails: ${shortDesc}\n${useCaseLine}`,
+                `${safeName}. Price: ${safePrice}.\nDetails: ${shortDesc}`
+            ],
+            medium: [
+                `${safeName} at ${safePrice}. ${ratingLine}\nDetails: ${shortDesc}\n${useCaseLine}`,
+                `${safeName} for ${safePrice}.\n${ratingLine} Details: ${shortDesc}\n${useCaseLine}`,
+                `${safeName} at ${safePrice}.\nDetails: ${shortDesc}\n${dealLine} ${useCaseLine}`
+            ],
+            long: [
+                `${safeName} at ${safePrice}.\n\nDetails: ${longDesc}\n\n${ratingLine} ${dealLine} ${useCaseLine}`,
+                `${safeName} for ${safePrice}.\n\nWhat you get: ${longDesc}\n\n${ratingLine} ${dealLine} ${useCaseLine}`,
+                `${safeName} at ${safePrice}.\n\nWhy it stands out: ${longDesc}\n\n${ratingLine} ${dealLine} ${useCaseLine}`
+            ]
+        };
+
+        const categoryTweaks = {
+            tech: 'Built for gadgets, setups, and daily productivity.',
+            fashion: 'Style-first, budget-friendly, and easy to wear.',
+            beauty: 'Simple routine upgrade with visible results.',
+            home: 'Clean look + practical use for everyday life.',
+            general: 'Practical and budget-smart.'
+        };
+
+        const pickTemplate = (items) => items[Math.floor(Math.random() * items.length)];
+        let body = pickTemplate(templateBank[duration] || templateBank.medium);
+        body += `\n${categoryTweaks[category] || categoryTweaks.general}`;
+
+        const hook = trendingHooks[Math.floor(Math.random() * trendingHooks.length)];
+        const discountMsg = discountRate > 15 ? `🔥 Get ${discountRate}% OFF today!` : "💎 Limited time deal!";
+        const ctaLine = `Grab it here 👉 ${productUrl}`;
+        const postSections = [hook, body, discountMsg, worldPopLine, ctaLine];
+        if (duration === 'short') {
+            postSections.push(commentTrigger);
+        }
+        const selectedPost = postSections.join('\n\n');
+        const cleanedPost = selectedPost
+            .replace(/^\s*AI take:\s*/gmi, '')
+            .replace(/\n{3,}/g, '\n\n');
+
+        elements.viralPost.innerText = cleanedPost;
         elements.viralPost.classList.remove('skeleton-text');
+        const selection = window.getSelection();
+        if (selection && selection.removeAllRanges) {
+            selection.removeAllRanges();
+        }
 
-        const baseTags = ['#AliExpressFinds', '#ViralProducts', '#DiscountAlert', '#ShoppingOnline', '#MustHave'];
-        const productTag = `#${data.name.split(' ')[0].replace(/[^a-zA-Z]/g, '')}`;
-        const tags = [...new Set([productTag, ...baseTags])].slice(0, 6);
+        // Reset UI
+        if (elements.regenLoader) elements.regenLoader.style.display = 'none';
+        if (elements.regenText) elements.regenText.style.opacity = '1';
+        elements.regenerateBtn.disabled = false;
+        isGenerating = false;
 
-        elements.hashtags.innerHTML = tags.map(t => `<span class="hashtag">${t}</span>`).join('');
+        // 3. Smart Hashtag Mixer (2026 Trending)
+        const viralTags = ['#FacebookFinds', '#FacebookDeals', '#DealAlert', '#SmartShopping', '#OnlineShopping', '#AliExpress'];
+        const categoryTags = {
+            'tech': ['#TechFinds', '#GadgetDeals', '#SetupUpgrade'],
+            'fashion': ['#StyleFinds', '#OutfitInspo', '#BudgetStyle'],
+            'beauty': ['#BeautyFinds', '#SkincareFinds', '#GlowUp'],
+            'home': ['#HomeFinds', '#HomeUpgrade', '#CleanHome'],
+            'general': ['#DailyFinds', '#BudgetFinds', '#SmartBuys']
+        };
 
-        log('Viral content generated!', 'success');
+        const mixedTags = [
+            `#${data.name.split(' ')[0].replace(/[^a-zA-Z]/g, '')}`,
+            ...categoryTags[category],
+            ...viralTags
+        ];
+
+        const finalTags = [...new Set(mixedTags)].slice(0, 7);
+        elements.hashtags.innerHTML = finalTags.map(t => `<span class="hashtag">${t}</span>`).join('');
+
+        log('Viral content generated with AI Trends!', 'success');
     }, 1500);
 }
 
+
 async function handleManualSubmit() {
     const sourceHtml = document.getElementById('m-source').value.trim();
+    const manualImages = [];
+    const manualImageInput = document.getElementById('m-image').value || '';
+    manualImageInput.split(/[\n,]+/).forEach(item => addUniqueImage(manualImages, item));
 
     let data;
     if (sourceHtml) {
         log('Analyzing pasted HTML...', 'info');
         try {
-            data = await extractDataFromHTML(sourceHtml);
+            const sourceUrl = elements.aliLink.value.trim();
+            data = await extractDataFromHTML(sourceHtml, sourceUrl);
         } catch (e) {
             log('Parse failed. Using manual fields.', 'error');
         }
@@ -635,13 +1223,19 @@ async function handleManualSubmit() {
             originalPrice: document.getElementById('m-oldPrice').value || '',
             discount: document.getElementById('m-discount').value || '0',
             description: document.getElementById('m-desc').value || 'Manual description.',
-            image: document.getElementById('m-image').value || 'https://via.placeholder.com/400',
-            images: [],
+            image: manualImages[0] || PLACEHOLDER_IMAGE,
+            images: manualImages,
             videos: [],
             rating: 'N/A',
             reviews: '0',
             features: ['Premium Quality', 'Best Deal']
         };
+    } else if (manualImages.length) {
+        const mergedImages = [...(data.images || [])];
+        manualImages.forEach(url => addUniqueImage(mergedImages, url));
+        data.images = mergedImages;
+        const hasImage = data.image && data.image !== PLACEHOLDER_IMAGE;
+        data.image = hasImage ? data.image : (mergedImages[0] || PLACEHOLDER_IMAGE);
     }
 
     elements.manualSection.style.display = 'none';
