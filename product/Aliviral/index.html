@@ -128,8 +128,20 @@
                     </div>
                 </div>
                 <div class="post-footer">
-                    <button class="btn-secondary" id="regenerateBtn">Regenerate Post</button>
-                    <button class="btn-primary" id="copyAllBtn">Copy All Content</button>
+                    <div class="footer-left">
+                        <select id="postDuration" class="glass-select">
+                            <option value="short">⚡ Quick Hook (Short)</option>
+                            <option value="medium" selected>⚖️ Balanced Story</option>
+                            <option value="long">📖 Full Narrative (Long)</option>
+                        </select>
+                    </div>
+                    <div class="footer-actions">
+                        <button class="btn-secondary" id="regenerateBtn">
+                            <span class="btn-icon-text">Regenerate</span>
+                            <div class="loader-circle mini" id="regenLoader" style="display: none;"></div>
+                        </button>
+                        <button class="btn-primary" id="copyAllBtn">Copy All</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -179,8 +191,9 @@
                     <input type="number" id="m-discount">
                 </div>
                 <div class="form-group">
-                    <label>Image URL</label>
-                    <input type="url" id="m-image">
+                    <label>Image URL(s)</label>
+                    <textarea id="m-image" rows="3"
+                        placeholder="Paste one or more image URLs, separated by new lines or commas"></textarea>
                 </div>
                 <div class="form-group full-width">
                     <label>OR: Paste Product Page Source (HTML)</label>
