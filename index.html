@@ -3,77 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopSphere - Curated Tech Deals</title>
-    <link rel="icon" href="/favico.png" type="image/png" />
+    <title>PawFeast - Premium Organic Pet Nutrition</title>
+    <meta name="description" content="Shop wholesome, organic, and vet-approved pet food for dogs, cats, and birds. Fresh ingredients delivered straight to your door.">
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Style Sheets -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <a href="https://shopsphere.linkpc.net">Shop<span class="highlight">Sphere</span></a>
-            </div>
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Find your next gadget...">
-                <button id="searchButton"><i class="fas fa-search"></i></button>
-                <div class="search-suggestions" id="searchSuggestions"></div>
-            </div>
-            <nav class="main-nav">
-                <a href="https://www.aliexpress.com/p/shoppingcart/index.html" target="_blank" class="nav-icon" title="Cart">
-                    <i class="fas fa-shopping-cart"></i>
-                </a>
-                <a href="https://www.aliexpress.com/p/ug-login-page/login.html" target="_blank" class="nav-icon" title="Account">
-                    <i class="fas fa-user-circle"></i>
-                </a>
+    <!-- Header Navigation -->
+    <header class="main-header" id="header">
+        <div class="container header-container">
+            <a href="#" class="logo" id="site-logo">
+                <svg viewBox="0 0 24 24" class="logo-icon" fill="currentColor">
+                    <path d="M12 14c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-6.5-3c1.38 0 2.5-1.12 2.5-2.5S6.88 6 5.5 6 3 7.12 3 8.5 4.12 11 5.5 11zm13 0c1.38 0 2.5-1.12 2.5-2.5S19.88 6 18.5 6 16 7.12 16 8.5c0 1.38 1.12 2.5 2.5 2.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.06-.86 1-.78 2.07-1.14 3.44-.81 1.76.42 2.91.07 3.56-.63.53-.57.86-1.42 1.44-2.1 1.48-1.74 3.73-1.74 5.21 0 .58.68.91 1.53 1.44 2.1.65.7 1.8 1.05 3.56.63 1.37-.33 2.44.03 3.44.81.04.28.06.57.06.86 0 4.41-3.59 8-8 8z"/>
+                </svg>
+                <span>PawFeast</span>
+            </a>
+            
+            <nav class="nav-menu" id="nav-menu">
+                <ul>
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#products" class="nav-link">Shop</a></li>
+                    <li><a href="#nutrition" class="nav-link">Nutrition Guide</a></li>
+                    <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                    <li><a href="#newsletter" class="nav-link">Join Club</a></li>
+                </ul>
             </nav>
+
+            <div class="header-actions">
+                <button class="icon-btn" aria-label="Search" id="btn-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+                <button class="icon-btn" aria-label="Favorites" id="btn-wishlist">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
+                <button class="cart-btn" aria-label="Cart" id="btn-cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-badge">3</span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <main>
-        <section id="hero">
-            <div class="container hero-container">
-                <div id="hero-product-image-container">
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-tag">
+                    <span class="pulse-dot"></span>
+                    100% Organic & Vet Approved
+                </div>
+                <h1 class="hero-title">Nourish Them Like <span class="highlight">Family</span></h1>
+                <p class="hero-subtitle">
+                    Crafted with fresh, ethically sourced ingredients. Formulated to provide optimal energy, coat shine, and complete wellness for dogs, cats, and birds.
+                </p>
+                <div class="hero-actions">
+                    <a href="#products" class="btn btn-primary" id="hero-cta-shop">Shop Selection</a>
+                    <a href="#nutrition" class="btn btn-secondary" id="hero-cta-guide">Nutrition Guide</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">4.9★</span>
+                        <span class="stat-label">12k+ Reviews</span>
                     </div>
-                <div id="hero-product-info">
-                    <h1 id="hero-product-name"></h1>
-                    <p class="hero-description">Today's featured deal. A must-have gadget at an unbeatable price!</p>
-                    <div class="hero-price-wrapper">
-                        <span id="hero-product-price" class="hero-price"></span>
-                        <span class="shipping-tag">Free Shipping</span>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Natural Ingredients</span>
                     </div>
-                    <div class="countdown-container">
-                        <p>Deal ends in:</p>
-                        <div id="countdown"></div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="blob-bg"></div>
+                <img src="assets/hero.png" alt="Happy pets gathered together" class="hero-img" id="hero-image">
+                <div class="floating-badge badge-1">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="badge-icon">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                    <span>Premium Nutrition</span>
+                </div>
+                <div class="floating-badge badge-2">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="badge-icon">
+                        <path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm1-17h-2v6H5v2h6v6h2v-6h6v-2h-6V5z"/>
+                    </svg>
+                    <span>Fresh & Healthy</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features Section -->
+    <section class="features-section">
+        <div class="container grid-3">
+            <div class="feature-card" id="feature-organic">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                        <path d="M12 6v12"></path>
+                        <path d="M8 10h8"></path>
+                    </svg>
+                </div>
+                <h3>100% Organic Recipes</h3>
+                <p>Absolutely no fillers, artificial preservatives, or synthetic additives. Just pure, wholesome food.</p>
+            </div>
+            <div class="feature-card" id="feature-vet">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                </div>
+                <h3>Vet Formulated</h3>
+                <p>Crafted alongside leading veterinarians to ensure a scientifically balanced, nutrient-dense diet.</p>
+            </div>
+            <div class="feature-card" id="feature-delivery">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13"></rect>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                </div>
+                <h3>Express Fresh Delivery</h3>
+                <p>Packed carefully in eco-friendly, insulated packaging and shipped fast to lock in freshness.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase -->
+    <section class="products-section" id="products">
+        <div class="container">
+            <div class="section-header">
+                <span class="sub-title">Best Sellers</span>
+                <h2 class="section-title">Explore Our Premium Bowls</h2>
+                <p class="section-desc">Tailored delicious formulas designed to suit the unique digestive needs of your pets.</p>
+            </div>
+            
+            <div class="grid-3 products-grid">
+                <!-- Product 1: Dog Food -->
+                <article class="product-card" id="product-dog">
+                    <div class="product-badge">Top Rated</div>
+                    <div class="product-image-container">
+                        <img src="assets/dog_food.png" alt="Premium Dog Food Packaging" class="product-image">
                     </div>
-                    <a id="hero-product-link" href="#" target="_blank" class="btn-primary">
-                        View Deal <i class="fas fa-arrow-right"></i>
+                    <div class="product-info">
+                        <div class="product-category">Dog Food</div>
+                        <h3 class="product-title">Canine Gourmet Orchard Feast</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(420)</span>
+                        </div>
+                        <p class="product-desc">Rich in free-range chicken, sweet potato, and fresh berries for active dogs.</p>
+                        <div class="product-footer">
+                            <span class="product-price">$24.99</span>
+                            <button class="btn-add-cart" aria-label="Add Canine Gourmet Orchard Feast to Cart" id="add-dog-food">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Product 2: Cat Food -->
+                <article class="product-card" id="product-cat">
+                    <div class="product-badge secondary">Organic</div>
+                    <div class="product-image-container">
+                        <img src="assets/cat_food.png" alt="Premium Cat Food Packaging" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Cat Food</div>
+                        <h3 class="product-title">Feline Ocean Salmon & Herb Blend</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(312)</span>
+                        </div>
+                        <p class="product-desc">Real ocean salmon and organic herbs supporting urinary health & hairball prevention.</p>
+                        <div class="product-footer">
+                            <span class="product-price">$19.99</span>
+                            <button class="btn-add-cart" aria-label="Add Feline Ocean Salmon & Herb Blend to Cart" id="add-cat-food">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Product 3: Bird Food -->
+                <article class="product-card" id="product-bird">
+                    <div class="product-badge tertiary">Eco Friendly</div>
+                    <div class="product-image-container">
+                        <img src="assets/bird_food.png" alt="Premium Bird Food Packaging" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Bird Food</div>
+                        <h3 class="product-title">Aves Harvest Seed & Fruit Melody</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(98)</span>
+                        </div>
+                        <p class="product-desc">Curated mix of sunflower seeds, grains, dried berries, and calcium chips.</p>
+                        <div class="product-footer">
+                            <span class="product-price">$14.99</span>
+                            <button class="btn-add-cart" aria-label="Add Aves Harvest Seed & Fruit Melody to Cart" id="add-bird-food">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nutrition Facts Interactive Tabbed Section (Pure CSS) -->
+    <section class="nutrition-section" id="nutrition">
+        <div class="container">
+            <div class="section-header">
+                <span class="sub-title">Expert Nutrition</span>
+                <h2 class="section-title">Designed for Specific Diet Needs</h2>
+                <p class="section-desc">We customize macro-nutrients and protein ratios specifically for each animal's lifestyle.</p>
+            </div>
+
+            <!-- Tab System wrapper -->
+            <div class="tabs-container">
+                <!-- Radio inputs for switching tabs -->
+                <input type="radio" name="nutrition-tabs" id="tab-dog-control" checked class="tab-input">
+                <input type="radio" name="nutrition-tabs" id="tab-cat-control" class="tab-input">
+                <input type="radio" name="nutrition-tabs" id="tab-bird-control" class="tab-input">
+
+                <!-- Tab Labels -->
+                <div class="tabs-header">
+                    <label for="tab-dog-control" class="tab-label" id="lbl-dog-tab">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                        Dog Diet
+                    </label>
+                    <label for="tab-cat-control" class="tab-label" id="lbl-cat-tab">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 14c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/>
+                        </svg>
+                        Cat Diet
+                    </label>
+                    <label for="tab-bird-control" class="tab-label" id="lbl-bird-tab">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.5 6c-1.38 0-2.5 1.12-2.5 2.5 0 .2.03.39.07.58l-5.64 5.64c-.19-.04-.38-.07-.58-.07-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5c0-.2-.03-.39-.07-.58l5.64-5.64c.19.04.38.07.58.07 1.38 0 2.5-1.12 2.5-2.5S19.88 6 18.5 6z"/>
+                        </svg>
+                        Bird Diet
+                    </label>
+                </div>
+
+                <!-- Tab Contents Wrapper -->
+                <div class="tabs-content">
+                    
+                    <!-- Dog Content -->
+                    <div class="tab-pane pane-dog">
+                        <div class="nutrition-grid">
+                            <div class="nutrition-text">
+                                <h3>Active Canine Diet Requirements</h3>
+                                <p>Dogs are omnivorous and need a healthy mix of proteins, fats, fibers, and carbohydrates. Our Canine Feast focuses heavily on muscle growth, joint strength, and brain health.</p>
+                                
+                                <ul class="benefits-list">
+                                    <li><strong>Glucosamine & Chondroitin:</strong> Supporting healthy joints for active runs.</li>
+                                    <li><strong>Omega 3 & 6:</strong> Cold-pressed fish oils for coat shine and skin protection.</li>
+                                    <li><strong>Probiotic Fibers:</strong> Keeping their gut health perfect for easy digestion.</li>
+                                </ul>
+                            </div>
+                            <div class="nutrition-bars">
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Crude Protein</span><span>26%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 78%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Crude Fat</span><span>15%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 45%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Fiber & Moisture</span><span>10%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 30%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Vitamins & Minerals</span><span>12%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 36%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat Content -->
+                    <div class="tab-pane pane-cat">
+                        <div class="nutrition-grid">
+                            <div class="nutrition-text">
+                                <h3>Obligate Carnivore Formulation</h3>
+                                <p>Cats require rich animal proteins and amino acids like Taurine which they cannot manufacture on their own. Our Feline Salmon recipe prioritizes high protein and low carbohydrate levels.</p>
+                                
+                                <ul class="benefits-list">
+                                    <li><strong>Taurine Enriched:</strong> Critical for maintaining optimal cardiac health and sharp vision.</li>
+                                    <li><strong>High Meat Protein:</strong> Supports lean muscles and efficient metabolic health.</li>
+                                    <li><strong>Urinary Tract Guard:</strong> pH-balanced formulation to prevent bladder stones.</li>
+                                </ul>
+                            </div>
+                            <div class="nutrition-bars">
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Crude Protein</span><span>34%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 95%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Crude Fat</span><span>18%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 55%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Taurine & Ash</span><span>2.5%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 15%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Vitamins & Omega-3</span><span>8.5%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 25%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bird Content -->
+                    <div class="tab-pane pane-bird">
+                        <div class="nutrition-grid">
+                            <div class="nutrition-text">
+                                <h3>Granivore Nutrient Profile</h3>
+                                <p>Birds require high energy fats from natural seeds, balanced proteins for feather quality, and essential calcium for beak strength. Our Aves Harvest provides exactly that diversity.</p>
+                                
+                                <ul class="benefits-list">
+                                    <li><strong>Calcium Fortified:</strong> Strengthening beak structures and protecting egg shells.</li>
+                                    <li><strong>Rich Seed Selection:</strong> Keeps their feather colors vibrant and healthy.</li>
+                                    <li><strong>Natural Grains:</strong> High energy fuels to support their natural energetic play.</li>
+                                </ul>
+                            </div>
+                            <div class="nutrition-bars">
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Crude Protein</span><span>14%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 42%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Crude Fat (Seeds)</span><span>12%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 36%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Calcium & Minerals</span><span>4%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 20%;"></div></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar-info"><span>Fiber</span><span>18%</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: 54%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <span class="sub-title">Happy Customers</span>
+                <h2 class="section-title">Trusted by Thousands of Owners</h2>
+                <p class="section-desc">See how PawFeast has transformed the health, vitality, and energy of these beloved pets.</p>
+            </div>
+
+            <div class="grid-3 testimonials-grid">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card" id="test-1">
+                    <div class="rating-stars">★★★★★</div>
+                    <p class="review-text">"My Golden Retriever used to have regular dry skin issues. Since we switched to PawFeast's Canine Gourmet, his coat looks shiny, and he's full of energy!"</p>
+                    <div class="user-info">
+                        <div class="avatar-placeholder bg-orange">M</div>
+                        <div>
+                            <h4 class="username">Marcus Thorne</h4>
+                            <span class="user-pet">Owner of Buddy (Golden Retriever)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card" id="test-2">
+                    <div class="rating-stars">★★★★★</div>
+                    <p class="review-text">"Our fussy Persian cat rejected almost every kibble brand. She absolutely devours the Salmon & Herb blend, and her digestion has improved dramatically."</p>
+                    <div class="user-info">
+                        <div class="avatar-placeholder bg-green">S</div>
+                        <div>
+                            <h4 class="username">Sarah Jenkins</h4>
+                            <span class="user-pet">Owner of Luna (Persian Cat)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card" id="test-3">
+                    <div class="rating-stars">★★★★★</div>
+                    <p class="review-text">"My African Grey parrot loves the Harvest Seed melody. The mix is completely fresh, dust-free, and contains the perfect variety of healthy treats."</p>
+                    <div class="user-info">
+                        <div class="avatar-placeholder bg-gold">D</div>
+                        <div>
+                            <h4 class="username">David K.</h4>
+                            <span class="user-pet">Owner of Kiwi (African Grey)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter & Promotion -->
+    <section class="newsletter-section" id="newsletter">
+        <div class="container">
+            <div class="newsletter-wrapper">
+                <div class="newsletter-content">
+                    <h2>Join the PawFeast Club</h2>
+                    <p>Subscribe to our newsletter to receive expert pet care tips, exclusive product releases, and <strong>10% off your first purchase!</strong></p>
+                    <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing! Your 10% coupon code is PAWCLUB10.');" id="news-form">
+                        <input type="email" placeholder="Enter your email address" required class="news-input" aria-label="Email address" id="inp-email">
+                        <button type="submit" class="btn btn-primary btn-news-submit" id="btn-subscribe">Subscribe Now</button>
+                    </form>
+                </div>
+                <div class="newsletter-visual">
+                    <svg viewBox="0 0 24 24" class="paw-bg-svg" fill="currentColor">
+                        <path d="M12 14c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-6.5-3c1.38 0 2.5-1.12 2.5-2.5S6.88 6 5.5 6 3 7.12 3 8.5 4.12 11 5.5 11zm13 0c1.38 0 2.5-1.12 2.5-2.5S19.88 6 18.5 6 16 7.12 16 8.5c0 1.38 1.12 2.5 2.5 2.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.06-.86 1-.78 2.07-1.14 3.44-.81 1.76.42 2.91.07 3.56-.63.53-.57.86-1.42 1.44-2.1 1.48-1.74 3.73-1.74 5.21 0 .58.68.91 1.53 1.44 2.1.65.7 1.8 1.05 3.56.63 1.37-.33 2.44.03 3.44.81.04.28.06.57.06.86 0 4.41-3.59 8-8 8z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="logo footer-logo">
+                    <svg viewBox="0 0 24 24" class="logo-icon" fill="currentColor">
+                        <path d="M12 14c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-6.5-3c1.38 0 2.5-1.12 2.5-2.5S6.88 6 5.5 6 3 7.12 3 8.5 4.12 11 5.5 11zm13 0c1.38 0 2.5-1.12 2.5-2.5S19.88 6 18.5 6 16 7.12 16 8.5c0 1.38 1.12 2.5 2.5 2.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                    </svg>
+                    <span>PawFeast</span>
+                </a>
+                <p class="brand-desc">Making sure your loyal companions receive the premium, clean, organic nutrition they deserve to thrive every single day.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-link" aria-label="Facebook" id="fb-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 8H7v3h2v9h3v-9h3l1-3h-4V6.5c0-.83.67-1.5 1.5-1.5h1.5V2H12C9.79 2 8 3.79 8 6v2h1z"/></svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram" id="ig-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Twitter" id="tw-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
                     </a>
                 </div>
             </div>
-        </section>
-
-        <section id="products">
-            <div class="container">
-                <h2 class="section-title">More Awesome Deals</h2>
-                <div id="product-listings">
-                    </div>
+            
+            <div class="footer-links">
+                <h4>Quick Shop</h4>
+                <ul>
+                    <li><a href="#products">Dog Food Gourmet</a></li>
+                    <li><a href="#products">Cat Salmon Feasts</a></li>
+                    <li><a href="#products">Aves Seed Melody</a></li>
+                    <li><a href="#products">Diet Treats</a></li>
+                </ul>
             </div>
-        </section>
-    </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; <span id="currentYear"></span> ShopSphere. All rights reserved. A curated collection from AliExpress.</p>
+            <div class="footer-links">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#nutrition">Nutrition Guide</a></li>
+                    <li><a href="#">About Ingredients</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Eco-Commitment</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Contact Us</h4>
+                <ul class="contact-list">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="contact-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        <span>+1 (800) 555-PAWS</span>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="contact-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span>hello@pawfeast.com</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom container">
+            <p>&copy; 2026 PawFeast. All rights reserved. Created with love for animals.</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
 </body>
 </html>
